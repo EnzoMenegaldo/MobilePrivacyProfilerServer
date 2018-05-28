@@ -1,5 +1,6 @@
 package fr.inria.diverse.mobileprivacyprofilerserver;
 
+
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.annotation.JsonView;
