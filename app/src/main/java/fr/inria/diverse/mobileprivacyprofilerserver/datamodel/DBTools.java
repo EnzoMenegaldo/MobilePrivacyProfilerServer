@@ -1,0 +1,131 @@
+/*  */
+
+package fr.inria.diverse.mobileprivacyprofilerserver.datamodel;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.associations.DetectedWifi_AccessPoint;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.field.FieldType;
+import com.j256.ormlite.misc.SqlExceptionUtil;
+import com.j256.ormlite.stmt.StatementBuilder.StatementType;
+import com.j256.ormlite.support.CompiledStatement;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.support.DatabaseConnection;
+import com.j256.ormlite.table.TableUtils;
+
+
+public class DBTools {
+	
+	// Initialisation de la Gestion des Log 
+	public static Log log = LogFactory.getLog(DBTools.class);
+	
+	// Constructeur
+	public DBTools(){
+		
+	}
+	
+	public void initializeSQLite(String url) throws ClassNotFoundException, SQLException{
+		
+		Class.forName("org.sqlite.JDBC");		
+		Connection c = DriverManager.getConnection(url);
+		log.debug("Opened database successfully");
+		
+		Statement  stmt = c.createStatement();
+		String sql = "CREATE TABLE \"android_metadata\" (\"locale\" TEXT DEFAULT 'en_US')"; 
+		stmt.executeUpdate(sql);
+		stmt.close();
+		
+		stmt = c.createStatement();
+		sql = "    INSERT INTO \"android_metadata\" VALUES ('en_US')"; 
+		stmt.executeUpdate(sql);
+		stmt.close();
+		c.close();
+
+	}
+	
+	/**
+	 * Setup our database and DAOs
+	 */
+	public MobilePrivacyProfilerDBHelper setupDatabase(ConnectionSource connectionSource)
+			throws Exception {
+		log.debug("setupDatabase() - Début");
+		
+		MobilePrivacyProfilerDBHelper dbContext = null;
+		
+		dbContext = new MobilePrivacyProfilerDBHelper();
+		dbContext.applicationHistoryDao = DaoManager.createDao(connectionSource, ApplicationHistory.class);
+		dbContext.applicationUsageStatsDao = DaoManager.createDao(connectionSource, ApplicationUsageStats.class);
+		dbContext.authentificationDao = DaoManager.createDao(connectionSource, Authentification.class);
+		dbContext.batteryUsageDao = DaoManager.createDao(connectionSource, BatteryUsage.class);
+		dbContext.bluetoothDeviceDao = DaoManager.createDao(connectionSource, BluetoothDevice.class);
+		dbContext.bluetoothLogDao = DaoManager.createDao(connectionSource, BluetoothLog.class);
+		dbContext.calendarEventDao = DaoManager.createDao(connectionSource, CalendarEvent.class);
+		dbContext.cdmaCellDataDao = DaoManager.createDao(connectionSource, CdmaCellData.class);
+		dbContext.cellDao = DaoManager.createDao(connectionSource, Cell.class);
+		dbContext.contactDao = DaoManager.createDao(connectionSource, Contact.class);
+		dbContext.contactEmailDao = DaoManager.createDao(connectionSource, ContactEmail.class);
+		dbContext.contactPhoneNumberDao = DaoManager.createDao(connectionSource, ContactPhoneNumber.class);
+		dbContext.contactPhysicalAddressDao = DaoManager.createDao(connectionSource, ContactPhysicalAddress.class);
+		dbContext.detectedWifi_AccessPointDao = DaoManager.createDao(connectionSource, DetectedWifi_AccessPoint.class);
+		dbContext.detectedWifiDao= DaoManager.createDao(connectionSource, DetectedWifi.class);
+		dbContext.geolocationDao= DaoManager.createDao(connectionSource, Geolocation.class);
+		dbContext.knownWifiDao= DaoManager.createDao(connectionSource, KnownWifi.class);
+		dbContext.mobilePrivacyProfilerDB_metadataDao= DaoManager.createDao(connectionSource, MobilePrivacyProfilerDB_metadata.class);
+		dbContext.neighboringCellHistoryDao= DaoManager.createDao(connectionSource, NeighboringCellHistory.class);
+		dbContext.otherCellDataDao= DaoManager.createDao(connectionSource, OtherCellData.class);
+		dbContext.phoneCallLogDao= DaoManager.createDao(connectionSource, PhoneCallLog.class);
+		dbContext.sMSDao= DaoManager.createDao(connectionSource, SMS.class);
+		dbContext.webHistoryDao= DaoManager.createDao(connectionSource, WebHistory.class);
+		dbContext.wifiAccessPointDao= DaoManager.createDao(connectionSource, WifiAccessPoint.class);
+
+
+		return dbContext;
+	}
+		
+	/**
+	 * Création des Tables
+	 */
+	public void databaseInitialisation(ConnectionSource connectionSource)
+			throws Exception {
+		log.debug("databaseInitialisation() - Début");	
+		
+		// if you need to create the table
+		TableUtils.createTable(connectionSource, ApplicationHistory.class);
+		TableUtils.createTable(connectionSource, ApplicationUsageStats.class);
+		TableUtils.createTable(connectionSource, Authentification.class);
+		TableUtils.createTable(connectionSource, BatteryUsage.class);
+		TableUtils.createTable(connectionSource, BluetoothDevice.class);
+		TableUtils.createTable(connectionSource, BluetoothLog.class);
+		TableUtils.createTable(connectionSource, CalendarEvent.class);
+		TableUtils.createTable(connectionSource, CdmaCellData.class);
+		TableUtils.createTable(connectionSource, Cell.class);
+		TableUtils.createTable(connectionSource, Contact.class);
+		TableUtils.createTable(connectionSource, ContactEmail.class);
+		TableUtils.createTable(connectionSource, ContactPhoneNumber.class);
+		TableUtils.createTable(connectionSource, ContactPhysicalAddress.class);
+		TableUtils.createTable(connectionSource, DetectedWifi_AccessPoint.class);
+		TableUtils.createTable(connectionSource, DetectedWifi.class);
+		TableUtils.createTable(connectionSource, Geolocation.class);
+		TableUtils.createTable(connectionSource, KnownWifi.class);
+		TableUtils.createTable(connectionSource, MobilePrivacyProfilerDB_metadata.class);
+		TableUtils.createTable(connectionSource, NeighboringCellHistory.class);
+		TableUtils.createTable(connectionSource, OtherCellData.class);
+		TableUtils.createTable(connectionSource, PhoneCallLog.class);
+		TableUtils.createTable(connectionSource, SMS.class);
+		TableUtils.createTable(connectionSource, WebHistory.class);
+		TableUtils.createTable(connectionSource, WifiAccessPoint.class);
+
+		
+		log.debug("databaseInitialisation() - Fin");
+	}
+	
+}
