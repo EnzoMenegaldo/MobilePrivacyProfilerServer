@@ -9,6 +9,13 @@ import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +25,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.associations.DetectedWifi_AccessPoint;
 // Start of user code additional import for ContactEmail
 // End of user code
 
@@ -26,6 +32,9 @@ import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.associations.Detec
   *  
   */ 
 @DatabaseTable(tableName = "contactEmail")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
+                  property  = "_id",
+				  scope = ContactEmail.class)
 public class ContactEmail {
 
 	public static Log log = LogFactory.getLog(ContactEmail.class);
@@ -43,29 +52,32 @@ public class ContactEmail {
      * dbHelper used to autorefresh values and doing queries
      * must be set other wise most getter will return proxy that will need to be refreshed
 	 */
+	@JsonIgnore
 	protected MobilePrivacyProfilerDBHelper _contextDB = null;
 
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
+	@JsonIgnore
 	public boolean contact_mayNeedDBRefresh = true;
 	
 
 	@DatabaseField
-	protected String email;
+	protected java.lang.String email;
 
 	@DatabaseField
-	protected String role;
+	protected java.lang.String role;
 	
 
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
+	// @JsonManagedReference(value="contact_email")
 	protected Contact contact;
 
 	// Start of user code ContactEmail additional user properties
 	// End of user code
 	
 	public ContactEmail() {} // needed by ormlite
-	public ContactEmail(String email, String role) {
+	public ContactEmail(java.lang.String email, java.lang.String role) {
 		super();
 		this.email = email;
 		this.role = role;
@@ -74,6 +86,7 @@ public class ContactEmail {
 	public int getId() {
 		return _id;
 	}
+	@JsonProperty
 	public void setId(int id) {
 		this._id = id;
 	}
@@ -81,20 +94,23 @@ public class ContactEmail {
 	public MobilePrivacyProfilerDBHelper getContextDB(){
 		return _contextDB;
 	}
+	@JsonIgnore
 	public void setContextDB(MobilePrivacyProfilerDBHelper contextDB){
 		this._contextDB = contextDB;
 	}
 
-	public String getEmail() {
+	public java.lang.String getEmail() {
 		return this.email;
 	}
-	public void setEmail(String email) {
+	@JsonProperty
+	public void setEmail(java.lang.String email) {
 		this.email = email;
 	}
-	public String getRole() {
+	public java.lang.String getRole() {
 		return this.role;
 	}
-	public void setRole(String role) {
+	@JsonProperty
+	public void setRole(java.lang.String role) {
 		this.role = role;
 	}
 
@@ -112,6 +128,7 @@ public class ContactEmail {
 		}
 		return this.contact;
 	}
+	@JsonProperty
 	public void setContact(Contact contact) {
 		this.contact = contact;
 	}			

@@ -9,6 +9,13 @@ import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +25,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.associations.DetectedWifi_AccessPoint;
 // Start of user code additional import for ApplicationUsageStats
 // End of user code
 
@@ -26,6 +32,9 @@ import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.associations.Detec
   *  
   */ 
 @DatabaseTable(tableName = "applicationUsageStats")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
+                  property  = "_id",
+				  scope = ApplicationUsageStats.class)
 public class ApplicationUsageStats {
 
 	public static Log log = LogFactory.getLog(ApplicationUsageStats.class);
@@ -46,11 +55,13 @@ public class ApplicationUsageStats {
      * dbHelper used to autorefresh values and doing queries
      * must be set other wise most getter will return proxy that will need to be refreshed
 	 */
+	@JsonIgnore
 	protected MobilePrivacyProfilerDBHelper _contextDB = null;
 
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
+	@JsonIgnore
 	public boolean application_mayNeedDBRefresh = true;
 	
 
@@ -59,15 +70,15 @@ public class ApplicationUsageStats {
 	protected long totalTimeInForeground;
 
 	@DatabaseField
-	protected String lastTimeUsed;
+	protected java.lang.String lastTimeUsed;
 
 	/** Get the beginning of the time range this UsageStats represents, measured in milliseconds since the epoch. */ 
 	@DatabaseField
-	protected String firstTimeStamp;
+	protected java.lang.String firstTimeStamp;
 
 	/** Get the end of the time range this UsageStats represents, measured in milliseconds since the epoch. */ 
 	@DatabaseField
-	protected String lastTimeStamp;
+	protected java.lang.String lastTimeStamp;
 
 	/** Daily, weekly, monthly, yearly as defined in https://developer.android.com/reference/android/app/usage/UsageStatsManager.html */ 
 	@DatabaseField
@@ -75,13 +86,14 @@ public class ApplicationUsageStats {
 	
 
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
+	// @JsonManagedReference(value="applicationhistory_applicationusagestats")
 	protected ApplicationHistory application;
 
 	// Start of user code ApplicationUsageStats additional user properties
 	// End of user code
 	
 	public ApplicationUsageStats() {} // needed by ormlite
-	public ApplicationUsageStats(long totalTimeInForeground, String lastTimeUsed, String firstTimeStamp, String lastTimeStamp, int requestedInterval) {
+	public ApplicationUsageStats(long totalTimeInForeground, java.lang.String lastTimeUsed, java.lang.String firstTimeStamp, java.lang.String lastTimeStamp, int requestedInterval) {
 		super();
 		this.totalTimeInForeground = totalTimeInForeground;
 		this.lastTimeUsed = lastTimeUsed;
@@ -93,6 +105,7 @@ public class ApplicationUsageStats {
 	public int getId() {
 		return _id;
 	}
+	@JsonProperty
 	public void setId(int id) {
 		this._id = id;
 	}
@@ -100,6 +113,7 @@ public class ApplicationUsageStats {
 	public MobilePrivacyProfilerDBHelper getContextDB(){
 		return _contextDB;
 	}
+	@JsonIgnore
 	public void setContextDB(MobilePrivacyProfilerDBHelper contextDB){
 		this._contextDB = contextDB;
 	}
@@ -107,30 +121,35 @@ public class ApplicationUsageStats {
 	public long getTotalTimeInForeground() {
 		return this.totalTimeInForeground;
 	}
+	@JsonProperty
 	public void setTotalTimeInForeground(long totalTimeInForeground) {
 		this.totalTimeInForeground = totalTimeInForeground;
 	}
-	public String getLastTimeUsed() {
+	public java.lang.String getLastTimeUsed() {
 		return this.lastTimeUsed;
 	}
-	public void setLastTimeUsed(String lastTimeUsed) {
+	@JsonProperty
+	public void setLastTimeUsed(java.lang.String lastTimeUsed) {
 		this.lastTimeUsed = lastTimeUsed;
 	}
-	public String getFirstTimeStamp() {
+	public java.lang.String getFirstTimeStamp() {
 		return this.firstTimeStamp;
 	}
-	public void setFirstTimeStamp(String firstTimeStamp) {
+	@JsonProperty
+	public void setFirstTimeStamp(java.lang.String firstTimeStamp) {
 		this.firstTimeStamp = firstTimeStamp;
 	}
-	public String getLastTimeStamp() {
+	public java.lang.String getLastTimeStamp() {
 		return this.lastTimeStamp;
 	}
-	public void setLastTimeStamp(String lastTimeStamp) {
+	@JsonProperty
+	public void setLastTimeStamp(java.lang.String lastTimeStamp) {
 		this.lastTimeStamp = lastTimeStamp;
 	}
 	public int getRequestedInterval() {
 		return this.requestedInterval;
 	}
+	@JsonProperty
 	public void setRequestedInterval(int requestedInterval) {
 		this.requestedInterval = requestedInterval;
 	}
@@ -149,6 +168,7 @@ public class ApplicationUsageStats {
 		}
 		return this.application;
 	}
+	@JsonProperty
 	public void setApplication(ApplicationHistory application) {
 		this.application = application;
 	}			

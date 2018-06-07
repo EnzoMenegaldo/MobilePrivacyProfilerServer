@@ -189,7 +189,7 @@ public class XMLHelper {
 			e.printStackTrace();
 		}
 		sb.append("\n\t</KNOWNWIFIS>\n");
-		sb.append("\n\t<WIFIACCESSPOINTS>");
+/*		sb.append("\n\t<WIFIACCESSPOINTS>");
 		try {	
 			List<WifiAccessPoint> wifiAccessPoints = dbContext.wifiAccessPointDao.queryForAll();
 			for(WifiAccessPoint  wifiAccessPoint : wifiAccessPoints){
@@ -202,7 +202,7 @@ public class XMLHelper {
 			e.printStackTrace();
 		}
 		sb.append("\n\t</WIFIACCESSPOINTS>\n");
-		sb.append("\n\t<DETECTEDWIFIS>");
+*/		sb.append("\n\t<DETECTEDWIFIS>");
 		try {	
 			List<DetectedWifi> detectedWifis = dbContext.detectedWifiDao.queryForAll();
 			for(DetectedWifi  detectedWifi : detectedWifis){
@@ -461,7 +461,7 @@ public class XMLHelper {
 					log.error("cannot create KnownWifi "+e.getMessage(),e);
 				}
 			}
-			log.info("starting creation of WifiAccessPoint...");
+/*			log.info("starting creation of WifiAccessPoint...");
 			for(WifiAccessPoint wifiAccessPoint : parser.wifiAccessPoints){
 				try {
 					dbContext.wifiAccessPointDao.create(wifiAccessPoint);
@@ -469,7 +469,7 @@ public class XMLHelper {
 					log.error("cannot create WifiAccessPoint "+e.getMessage(),e);
 				}
 			}
-			log.info("starting creation of DetectedWifi...");
+*/			log.info("starting creation of DetectedWifi...");
 			for(DetectedWifi detectedWifi : parser.detectedWifis){
 				try {
 					dbContext.detectedWifiDao.create(detectedWifi);
@@ -652,7 +652,7 @@ public class XMLHelper {
 					log.error("cannot update KnownWifi "+e.getMessage(),e);
 				}
 			}
-			log.info("starting update DB of WifiAccessPoint...");
+/*			log.info("starting update DB of WifiAccessPoint...");
 			for(WifiAccessPoint elem : parser.wifiAccessPointsToUpdate){
 				try {
 					dbContext.wifiAccessPointDao.update(elem);
@@ -660,7 +660,7 @@ public class XMLHelper {
 					log.error("cannot update WifiAccessPoint "+e.getMessage(),e);
 				}
 			}
-			log.info("starting update DB of DetectedWifi...");
+*/			log.info("starting update DB of DetectedWifi...");
 			for(DetectedWifi elem : parser.detectedWifisToUpdate){
 				try {
 					dbContext.detectedWifiDao.update(elem);

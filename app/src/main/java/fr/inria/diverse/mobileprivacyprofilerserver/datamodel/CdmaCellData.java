@@ -9,16 +9,23 @@ import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collection;
 
+import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.MobilePrivacyProfilerDBHelper;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.associations.DetectedWifi_AccessPoint;
 // Start of user code additional import for CdmaCellData
 // End of user code
 
@@ -26,6 +33,9 @@ import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.associations.Detec
   *  
   */ 
 @DatabaseTable(tableName = "cdmaCellData")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
+                  property  = "_id",
+				  scope = CdmaCellData.class)
 public class CdmaCellData {
 
 	public static Log log = LogFactory.getLog(CdmaCellData.class);
@@ -43,11 +53,13 @@ public class CdmaCellData {
      * dbHelper used to autorefresh values and doing queries
      * must be set other wise most getter will return proxy that will need to be refreshed
 	 */
+	@JsonIgnore
 	protected MobilePrivacyProfilerDBHelper _contextDB = null;
 
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
+	@JsonIgnore
 	public boolean identity_mayNeedDBRefresh = true;
 	
 
@@ -59,6 +71,7 @@ public class CdmaCellData {
 	
 
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
+	// @JsonManagedReference(value="cell_cdmacelldata")
 	protected Cell identity;
 
 	// Start of user code CdmaCellData additional user properties
@@ -74,6 +87,7 @@ public class CdmaCellData {
 	public int getId() {
 		return _id;
 	}
+	@JsonProperty
 	public void setId(int id) {
 		this._id = id;
 	}
@@ -81,6 +95,7 @@ public class CdmaCellData {
 	public MobilePrivacyProfilerDBHelper getContextDB(){
 		return _contextDB;
 	}
+	@JsonIgnore
 	public void setContextDB(MobilePrivacyProfilerDBHelper contextDB){
 		this._contextDB = contextDB;
 	}
@@ -88,12 +103,14 @@ public class CdmaCellData {
 	public int getLongitude() {
 		return this.longitude;
 	}
+	@JsonProperty
 	public void setLongitude(int longitude) {
 		this.longitude = longitude;
 	}
 	public int getLatitude() {
 		return this.latitude;
 	}
+	@JsonProperty
 	public void setLatitude(int latitude) {
 		this.latitude = latitude;
 	}
@@ -112,6 +129,7 @@ public class CdmaCellData {
 		}
 		return this.identity;
 	}
+	@JsonProperty
 	public void setIdentity(Cell identity) {
 		this.identity = identity;
 	}			

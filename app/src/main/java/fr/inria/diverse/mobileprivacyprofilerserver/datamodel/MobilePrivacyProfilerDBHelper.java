@@ -7,14 +7,13 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 
-import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.associations.DetectedWifi_AccessPoint;
 
 //Start of user code additional import for MobilePrivacyProfilerDBHelper
 import com.j256.ormlite.dao.CloseableIterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 //End of user code
 /**
@@ -36,6 +35,12 @@ public class MobilePrivacyProfilerDBHelper {
 	//public RuntimeExceptionDao<Authentification, Integer> authentificationDao;
 	public Dao<Contact, Integer> contactDao;
 	//public RuntimeExceptionDao<Contact, Integer> contactDao;
+	public Dao<ContactOrganisation, Integer> contactOrganisationDao;
+	//public RuntimeExceptionDao<ContactOrganisation, Integer> contactOrganisationDao;
+	public Dao<ContactIM, Integer> contactIMDao;
+	//public RuntimeExceptionDao<ContactIM, Integer> contactIMDao;
+	public Dao<ContactEvent, Integer> contactEventDao;
+	//public RuntimeExceptionDao<ContactEvent, Integer> contactEventDao;
 	public Dao<ContactPhoneNumber, Integer> contactPhoneNumberDao;
 	//public RuntimeExceptionDao<ContactPhoneNumber, Integer> contactPhoneNumberDao;
 	public Dao<ContactPhysicalAddress, Integer> contactPhysicalAddressDao;
@@ -44,8 +49,6 @@ public class MobilePrivacyProfilerDBHelper {
 	//public RuntimeExceptionDao<ContactEmail, Integer> contactEmailDao;
 	public Dao<KnownWifi, Integer> knownWifiDao;
 	//public RuntimeExceptionDao<KnownWifi, Integer> knownWifiDao;
-	public Dao<WifiAccessPoint, Integer> wifiAccessPointDao;
-	//public RuntimeExceptionDao<WifiAccessPoint, Integer> wifiAccessPointDao;
 	public Dao<DetectedWifi, Integer> detectedWifiDao;
 	//public RuntimeExceptionDao<DetectedWifi, Integer> detectedWifiDao;
 	public Dao<Geolocation, Integer> geolocationDao;
@@ -72,8 +75,6 @@ public class MobilePrivacyProfilerDBHelper {
 	//public RuntimeExceptionDao<BatteryUsage, Integer> batteryUsageDao;
 	public Dao<WebHistory, Integer> webHistoryDao;
 	//public RuntimeExceptionDao<WebHistory, Integer> webHistoryDao;
-	public Dao<DetectedWifi_AccessPoint, Integer> detectedWifi_AccessPointDao;
-	//public RuntimeExceptionDao<DetectedWifi_AccessPoint, Integer> detectedWifi_AccessPointDao;
 
 	
 	public MobilePrivacyProfilerDBHelper(){
@@ -85,11 +86,13 @@ public class MobilePrivacyProfilerDBHelper {
 		Dao<ApplicationUsageStats, Integer> applicationUsageStatsDao,
 		Dao<Authentification, Integer> authentificationDao,
 		Dao<Contact, Integer> contactDao,
+		Dao<ContactOrganisation, Integer> contactOrganisationDao,
+		Dao<ContactIM, Integer> contactIMDao,
+		Dao<ContactEvent, Integer> contactEventDao,
 		Dao<ContactPhoneNumber, Integer> contactPhoneNumberDao,
 		Dao<ContactPhysicalAddress, Integer> contactPhysicalAddressDao,
 		Dao<ContactEmail, Integer> contactEmailDao,
 		Dao<KnownWifi, Integer> knownWifiDao,
-		Dao<WifiAccessPoint, Integer> wifiAccessPointDao,
 		Dao<DetectedWifi, Integer> detectedWifiDao,
 		Dao<Geolocation, Integer> geolocationDao,
 		Dao<CalendarEvent, Integer> calendarEventDao,
@@ -102,19 +105,20 @@ public class MobilePrivacyProfilerDBHelper {
 		Dao<BluetoothLog, Integer> bluetoothLogDao,
 		Dao<SMS, Integer> sMSDao,
 		Dao<BatteryUsage, Integer> batteryUsageDao,
-		Dao<WebHistory, Integer> webHistoryDao,
-        Dao<DetectedWifi_AccessPoint, Integer> detectedWifi_AccessPointDao
+		Dao<WebHistory, Integer> webHistoryDao        
 	){
 		this.mobilePrivacyProfilerDB_metadataDao = mobilePrivacyProfilerDB_metadataDao;
 		this.applicationHistoryDao = applicationHistoryDao;
 		this.applicationUsageStatsDao = applicationUsageStatsDao;
 		this.authentificationDao = authentificationDao;
 		this.contactDao = contactDao;
+		this.contactOrganisationDao = contactOrganisationDao;
+		this.contactIMDao = contactIMDao;
+		this.contactEventDao = contactEventDao;
 		this.contactPhoneNumberDao = contactPhoneNumberDao;
 		this.contactPhysicalAddressDao = contactPhysicalAddressDao;
 		this.contactEmailDao = contactEmailDao;
 		this.knownWifiDao = knownWifiDao;
-		this.wifiAccessPointDao = wifiAccessPointDao;
 		this.detectedWifiDao = detectedWifiDao;
 		this.geolocationDao = geolocationDao;
 		this.calendarEventDao = calendarEventDao;
@@ -128,7 +132,6 @@ public class MobilePrivacyProfilerDBHelper {
 		this.sMSDao = sMSDao;
 		this.batteryUsageDao = batteryUsageDao;
 		this.webHistoryDao = webHistoryDao;
-		this.detectedWifi_AccessPointDao = detectedWifi_AccessPointDao;
 	}
 
 	//Start of user code additional methods for MobilePrivacyProfilerDBHelper
@@ -173,14 +176,33 @@ public class MobilePrivacyProfilerDBHelper {
 		return null;
 	}
 
+	/** find ApplicationUsageStats in the base using refereed ApplicationHistory
+	 * @param applicationHistory
+	 * @return
+	 */
+	public List<ApplicationUsageStats> queryApplicationUsageStatsByApplicationHistory(ApplicationHistory applicationHistory) {
+		try {
+			ApplicationUsageStats queryApplicationUsageStats = new ApplicationUsageStats();
+			queryApplicationUsageStats.setApplication(applicationHistory);
+			List<ApplicationUsageStats> fichesDeLaBase = this.applicationUsageStatsDao.queryForMatching(queryApplicationUsageStats);
+			if(0==fichesDeLaBase.size()){
+				log.debug("ApplicationUsageStats doesn't exist in the base for this Application :"+applicationHistory.getPackageName());
+				return null;
+			}
+			return fichesDeLaBase;
+		} catch (SQLException e) { log.error("error while querying applicationUsageStats with application from package :"+applicationHistory.packageName+ " in the base", e); }
+		return null;
+	}
+
 	/** find Cell in the base using cellId
 	 * @param cellId
 	 * @return Cell with the cellId Identity
 	 */
 	public Cell queryCellByCellId(int cellId){
+		//Log.d(TAG,"queryCellByCellId with parameter : "+ cellId);
+		Cell queryCell = new Cell(cellId);
+		log.debug("queryCellByCellId with "+queryCell.getCellId()+" as cellId");
 		try {
-			Cell queryCell = new Cell();
-			queryCell.setId(cellId);
 			List<Cell> queryOutput = this.cellDao.queryForMatching(queryCell);
 			if(1 != queryOutput.size()){
 				log.debug("Cell with cellId "+queryCell.getCellId()+ " doesn't exist in the base");
@@ -198,10 +220,10 @@ public class MobilePrivacyProfilerDBHelper {
 	 * @return A list of String types
 	 */
 	public List<String> queryAllAuthentificationType(){
-		List<String> result=null;
+		List<String> result=new ArrayList<String>();
 
 		Authentification queryAuth = new Authentification();
-		List<Authentification> queryOutput=null;
+		List<Authentification> queryOutput=new ArrayList<>();
 		try {
 			queryOutput = this.authentificationDao.queryForMatching(queryAuth);
 		} catch (SQLException e) {
@@ -229,7 +251,7 @@ public class MobilePrivacyProfilerDBHelper {
 			e.printStackTrace();
 		}
 
-		if(null!=queryOutput) {return queryOutput.get(0);}
+		if(0!=queryOutput.size()) {return queryOutput.get(0);}
 		else { return null; }
 	}
 
@@ -238,19 +260,20 @@ public class MobilePrivacyProfilerDBHelper {
 	 * @return
 	 */
 	public MobilePrivacyProfilerDB_metadata getDeviceDBMetadata() {
-		MobilePrivacyProfilerDB_metadata metadata;
-		CloseableIterator<MobilePrivacyProfilerDB_metadata> it = this.mobilePrivacyProfilerDB_metadataDao.iterator();
-		if(it.hasNext()){
-			metadata = it.next();
-			it.closeQuietly();
+		MobilePrivacyProfilerDB_metadata metadata=null;
+		List<MobilePrivacyProfilerDB_metadata> it = new ArrayList<>();
+        try {
+            it= this.mobilePrivacyProfilerDB_metadataDao.queryForAll();
+
+        if(!it.isEmpty()){
+			metadata = it.get(0);
 		} else {
 			metadata = new MobilePrivacyProfilerDB_metadata();
-			try {
+
 				this.mobilePrivacyProfilerDB_metadataDao.create(metadata);
-			} catch (SQLException e) {
-				log.error("error while creating MobilePrivacyProfilerDB_metadata", e);
-			}
 		}
+        } catch (SQLException e) { log.error("error while getting MobilePrivacyProfilerDB_metadata", e);}
+
 		return metadata;
 	}
 
@@ -258,16 +281,11 @@ public class MobilePrivacyProfilerDBHelper {
 	 * Get a list of all entries in ApplicationHistory
 	 * @return List<ApplicationHistory>
 	 */
-	public List<ApplicationHistory> getAllApplicationHistory() {
+	public List<ApplicationHistory> getAllApplicationHistory() throws SQLException {
+		List<ApplicationHistory> result=null;
+		List<ApplicationHistory> it = this.applicationHistoryDao.queryForAll();
 
-		ApplicationHistory queryApplicationHistory = new ApplicationHistory();
-		List<ApplicationHistory> queryOutput = null;
-		try {
-			queryOutput = this.applicationHistoryDao.queryForMatching(queryApplicationHistory);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return queryOutput;
+		return it;
 	}
 
 	/**
@@ -278,7 +296,7 @@ public class MobilePrivacyProfilerDBHelper {
 
 		ApplicationHistory query = new ApplicationHistory();
 		query.setPackageName(appHist.getPackageName());
-		query.set_id(appHist.get_id());
+		query.setId(appHist.getId());
 		List<ApplicationHistory> queryOutput = null;
 		try {
 			queryOutput = this.applicationHistoryDao.queryForMatching(query);
@@ -286,6 +304,56 @@ public class MobilePrivacyProfilerDBHelper {
 			e.printStackTrace();
 		}
 		return !queryOutput.isEmpty();
+	}
+
+	/**
+	 * drop all data from Contact, ContactPhoneNumber, ContactIM, ContactOrganisation, ContactEvent,
+	 * ContactEmail, ContactPhysicalAddress
+	 */
+	public void flushContactDataSet(){
+
+		List<ContactPhoneNumber> queryContactPhoneNumberOutput=new ArrayList<>();
+		try {
+			queryContactPhoneNumberOutput = this.contactPhoneNumberDao.queryForAll();
+			this.contactPhoneNumberDao.delete(queryContactPhoneNumberOutput);
+		} catch (SQLException e) { log.error("error while flushing ContactPhoneNumbers from previous scan the base", e); }
+
+		List<ContactIM> queryContactIMOutput=new ArrayList<>();
+		try {
+			queryContactIMOutput = this.contactIMDao.queryForAll();
+			this.contactIMDao.delete(queryContactIMOutput);
+		} catch (SQLException e) { log.error("error while flushing ContactInstantMessengers from previous scan the base", e); }
+
+		List<ContactOrganisation> queryContactOrganisationOutput=new ArrayList<>();
+		try {
+			queryContactOrganisationOutput = this.contactOrganisationDao.queryForAll();
+			this.contactOrganisationDao.delete(queryContactOrganisationOutput);
+		}catch (SQLException e) { log.error("error while flushing ContactOrganisations from previous scan the base", e); }
+
+		List<ContactEvent> queryContactEventOutput=new ArrayList<>();
+		try {
+			queryContactEventOutput = this.contactEventDao.queryForAll();
+			this.contactEventDao.delete(queryContactEventOutput);
+		} catch (SQLException e) { log.error("error while flushing ContactEvents from previous scan the base", e); }
+
+		List<ContactEmail> queryContactEmailOutput=new ArrayList<>();
+		try {
+			queryContactEmailOutput = this.contactEmailDao.queryForAll();
+			this.contactEmailDao.delete(queryContactEmailOutput);
+		} catch (SQLException e) { log.error("error while flushing ContactEmails from previous scan the base", e); }
+
+		List<ContactPhysicalAddress> queryContactPhysicalAddressOutput=new ArrayList<>();
+		try {
+			queryContactPhysicalAddressOutput = this.contactPhysicalAddressDao.queryForAll();
+			this.contactPhysicalAddressDao.delete(queryContactPhysicalAddressOutput);
+		} catch (SQLException e) { log.error("error while flushing ContactPhysicalAddresses from previous scan the base", e); }
+
+		List<Contact> queryContactOutput=new ArrayList<>();
+		try {
+			queryContactOutput = this.contactDao.queryForAll();
+			this.contactDao.delete(queryContactOutput);
+		} catch (SQLException e) { log.error("error while flushing Contacts from previous scan the base", e); }
+
 	}
 
 	//End of user code

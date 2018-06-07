@@ -57,7 +57,7 @@ public class DBTools {
 	 */
 	public MobilePrivacyProfilerDBHelper setupDatabase(ConnectionSource connectionSource)
 			throws Exception {
-		log.debug("setupDatabase() - Début");
+		log.debug("setupDatabase() - Start");
 		
 		MobilePrivacyProfilerDBHelper dbContext = null;
 		
@@ -75,7 +75,6 @@ public class DBTools {
 		dbContext.contactEmailDao = DaoManager.createDao(connectionSource, ContactEmail.class);
 		dbContext.contactPhoneNumberDao = DaoManager.createDao(connectionSource, ContactPhoneNumber.class);
 		dbContext.contactPhysicalAddressDao = DaoManager.createDao(connectionSource, ContactPhysicalAddress.class);
-		dbContext.detectedWifi_AccessPointDao = DaoManager.createDao(connectionSource, DetectedWifi_AccessPoint.class);
 		dbContext.detectedWifiDao= DaoManager.createDao(connectionSource, DetectedWifi.class);
 		dbContext.geolocationDao= DaoManager.createDao(connectionSource, Geolocation.class);
 		dbContext.knownWifiDao= DaoManager.createDao(connectionSource, KnownWifi.class);
@@ -85,18 +84,19 @@ public class DBTools {
 		dbContext.phoneCallLogDao= DaoManager.createDao(connectionSource, PhoneCallLog.class);
 		dbContext.sMSDao= DaoManager.createDao(connectionSource, SMS.class);
 		dbContext.webHistoryDao= DaoManager.createDao(connectionSource, WebHistory.class);
-		dbContext.wifiAccessPointDao= DaoManager.createDao(connectionSource, WifiAccessPoint.class);
-
+		dbContext.contactEventDao= DaoManager.createDao(connectionSource, ContactEvent.class);
+		dbContext.contactIMDao= DaoManager.createDao(connectionSource, ContactIM.class);
+		dbContext.contactOrganisationDao= DaoManager.createDao(connectionSource, ContactOrganisation.class);
 
 		return dbContext;
 	}
 		
 	/**
-	 * Création des Tables
+	 *  Tables creation
 	 */
 	public void databaseInitialisation(ConnectionSource connectionSource)
 			throws Exception {
-		log.debug("databaseInitialisation() - Début");	
+		log.debug("databaseInitialisation() - Start");
 		
 		// if you need to create the table
 		TableUtils.createTable(connectionSource, ApplicationHistory.class);
@@ -123,9 +123,12 @@ public class DBTools {
 		TableUtils.createTable(connectionSource, SMS.class);
 		TableUtils.createTable(connectionSource, WebHistory.class);
 		TableUtils.createTable(connectionSource, WifiAccessPoint.class);
+		TableUtils.createTable(connectionSource, ContactEvent.class);
+		TableUtils.createTable(connectionSource, ContactIM.class);
+		TableUtils.createTable(connectionSource, ContactOrganisation.class);
 
 		
-		log.debug("databaseInitialisation() - Fin");
+		log.debug("databaseInitialisation() - End");
 	}
 	
 }

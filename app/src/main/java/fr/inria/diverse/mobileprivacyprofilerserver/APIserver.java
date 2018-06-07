@@ -20,6 +20,8 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.util.component.LifeCycle;
 import org.eclipse.jetty.http.HttpField;
 import org.sqlite.JDBC;
+import spark.Response;
+
 import javax.servlet.Filter;
 
 import java.io.File;
@@ -35,7 +37,7 @@ import static spark.Spark.post;
 
 public class APIserver {
     private static MobilePrivacyProfilerDBHelper  dbHelper;
-    // Initialisation de la Gestion des Log
+    // Initialising log management
     private static Log log = LogFactory.getLog(Test.class);
 
     public static void main(String[] args) {
@@ -45,16 +47,10 @@ public class APIserver {
 
     post("/ApplicationHistory",(request, response)->{
 
-    String requestBody = request.body();
+        //convert the request.body() into a List<ApplicationHistory>
+        List<ApplicationHistory> applicationHistories = deserializeList(request.body(),ApplicationHistory.class,response);
 
-        ObjectMapper mapper = new ObjectMapper();
-        List<ApplicationHistory> applicationHistories = null;
-        try {
-            applicationHistories = mapper.readValue(requestBody, mapper.getTypeFactory().constructCollectionType(List.class, ApplicationHistory.class));
-        } catch (IOException e) {
-            e.printStackTrace(); response.status(400);return "Internal error on Json parse";
-        }
-
+        //flush the objects into the DB
         try {
             for(ApplicationHistory appHist : applicationHistories){
                 boolean redundant = getDBHelper().isRegistredApplicationHistory(appHist);
@@ -72,6 +68,123 @@ public class APIserver {
     //TODO Add a method to handle others tables
 
     }//end main
+
+
+    /**
+     * Use Jackson to deserialize a String into List<deserialisationClassObject>
+     * @param jsonArg
+     * @param deserialisationClass
+     * @return a List<deserialisationClassObject>
+     */
+
+    private static List deserializeList (String jsonArg, Class deserialisationClass, Response response) {
+        //convert the body into a List<jsonString>
+        List<String> list =null;
+
+        try {
+            list= parser(jsonArg);
+        } catch (Exception e) {
+            e.printStackTrace(); response.status(400);
+        }
+        //convert List<jsonString> into List<ApplicationHistory>
+        List outPutList = new ArrayList();
+
+        for (String json:list){
+            outPutList.add(deserialisationClass.cast(deserialize(json,deserialisationClass,response)));
+        }
+        return outPutList;
+    }
+
+    /**
+     * Use Jackson to deserialize a single object of deserialisationClass Type
+     * @param jsonArg
+     * @param deserialisationClass
+     * @return a single Object you need to cast into deserialisationClass Type
+     */
+
+    private static Object deserialize (String jsonArg, Class deserialisationClass, Response response) {
+        // Convert JSON string to single Object
+        ObjectMapper mapper = new ObjectMapper();
+        Object deserializedObject = null;
+        try {
+            deserializedObject = mapper.readValue(jsonArg, deserialisationClass);
+        } catch (IOException e) {
+            e.printStackTrace();response.status(400);return "Internal error on Json parse";
+        }
+        log.debug("Deserialized json: " + deserializedObject.toString());
+
+        return deserializedObject;
+    }
+
+
+    /**
+     * take in a single json String to parse it into a List<String>
+     * @param json
+     * @return a List<String>
+     */
+    public static List<String> parser(String json){
+
+        int length;
+        int parseCounter;
+        int hookCount=0;
+        int parenthesisCount=0;
+
+        length = json.length();
+        List<String> result = new ArrayList<>();
+
+        StringBuffer stringBuffer = new StringBuffer();
+        for(parseCounter = 0;parseCounter<length;parseCounter++) {
+            char testedCar = json.charAt(parseCounter);
+
+            switch(testedCar) {
+                case '['    :
+                    if(0!=hookCount){
+                        stringBuffer.append(testedCar);
+                    }
+                    hookCount++;
+                    break;
+
+                case '{'    :
+                    parenthesisCount++;
+                    stringBuffer.append(testedCar);
+                    break;
+
+                case '}'    :
+                    parenthesisCount--;
+                    stringBuffer.append(testedCar);
+                    break;
+
+                case ']'    :
+                    hookCount--;
+                    if(0==hookCount){
+                        result.add(stringBuffer.toString());
+                        stringBuffer= new StringBuffer();
+                    }
+                    else{
+                        stringBuffer.append(testedCar);
+                    }
+                    break;
+
+                case ','    :
+                    if(0==parenthesisCount){
+                        result.add(stringBuffer.toString());
+                        stringBuffer= new StringBuffer();
+                    }else{ stringBuffer.append(testedCar);}
+                    break;
+
+                case ' '    :
+                    if(0!=parenthesisCount){
+                        stringBuffer.append(testedCar);
+                    }
+                    break;
+
+                default     :       stringBuffer.append(testedCar);
+            }//end switch
+
+        }//end for
+
+        return result;
+    }
 
     private static MobilePrivacyProfilerDBHelper getDBHelper(){
         if(dbHelper == null){

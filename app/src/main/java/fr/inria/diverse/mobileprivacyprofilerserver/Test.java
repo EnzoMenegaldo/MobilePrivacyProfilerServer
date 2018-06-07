@@ -12,6 +12,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class Test {
 
@@ -20,21 +21,23 @@ public class Test {
     public static Log log = LogFactory.getLog(Test.class);
 
     public static void main(String[] args) {
+        UUID uuid = UUID.randomUUID();
 
+        log.info(uuid.toString());
 
-
+/*
         ApplicationHistory a = new ApplicationHistory();
         a.setAppName("appName : a");
         a.setPackageName("packageName : a");
-        a.set_id(1);
+        a.setId(1);
         ApplicationHistory b = new ApplicationHistory();
         b.setAppName("appName : b");
         b.setPackageName("packageName : b");
-        b.set_id(2);
+        b.setId(2);
         ApplicationHistory c = new ApplicationHistory();
         c.setAppName("appName : c");
         c.setPackageName("packageName : c");
-        c.set_id(3);
+        c.setId(3);
 
         List<ApplicationHistory> appHistToExport = new ArrayList<ApplicationHistory>();
         appHistToExport.add(a);
@@ -73,8 +76,8 @@ public class Test {
         List<ApplicationHistory> appHistList = null;
         try {
             appHistList = mapper.readValue(jsonStringSample, mapper.getTypeFactory().constructCollectionType(List.class, ApplicationHistory.class));
-            /*ApplicationHistory[] appHistTemp = mapper.readValue(jsonStringSample, ApplicationHistory[].class);
-            appHistList = new ArrayList<>(Arrays.asList(appHistTemp));*/
+           //ApplicationHistory[] appHistTemp = mapper.readValue(jsonStringSample, ApplicationHistory[].class);
+            //appHistList = new ArrayList<>(Arrays.asList(appHistTemp));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,7 +89,7 @@ public class Test {
         }
         log.info(jsonList);
 
-
+*/
 
     }//end main
 }//end class
