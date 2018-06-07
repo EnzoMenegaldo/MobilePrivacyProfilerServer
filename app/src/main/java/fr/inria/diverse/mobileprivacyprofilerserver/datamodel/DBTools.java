@@ -6,20 +6,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
-import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.associations.DetectedWifi_AccessPoint;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.field.FieldType;
-import com.j256.ormlite.misc.SqlExceptionUtil;
-import com.j256.ormlite.stmt.StatementBuilder.StatementType;
-import com.j256.ormlite.support.CompiledStatement;
 import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
 
 
@@ -112,7 +104,6 @@ public class DBTools {
 		TableUtils.createTable(connectionSource, ContactEmail.class);
 		TableUtils.createTable(connectionSource, ContactPhoneNumber.class);
 		TableUtils.createTable(connectionSource, ContactPhysicalAddress.class);
-		TableUtils.createTable(connectionSource, DetectedWifi_AccessPoint.class);
 		TableUtils.createTable(connectionSource, DetectedWifi.class);
 		TableUtils.createTable(connectionSource, Geolocation.class);
 		TableUtils.createTable(connectionSource, KnownWifi.class);
@@ -122,7 +113,6 @@ public class DBTools {
 		TableUtils.createTable(connectionSource, PhoneCallLog.class);
 		TableUtils.createTable(connectionSource, SMS.class);
 		TableUtils.createTable(connectionSource, WebHistory.class);
-		TableUtils.createTable(connectionSource, WifiAccessPoint.class);
 		TableUtils.createTable(connectionSource, ContactEvent.class);
 		TableUtils.createTable(connectionSource, ContactIM.class);
 		TableUtils.createTable(connectionSource, ContactOrganisation.class);

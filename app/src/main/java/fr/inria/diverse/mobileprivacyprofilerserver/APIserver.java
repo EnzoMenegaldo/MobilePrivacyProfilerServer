@@ -54,7 +54,7 @@ public class APIserver {
         try {
             for(ApplicationHistory appHist : applicationHistories){
                 boolean redundant = getDBHelper().isRegistredApplicationHistory(appHist);
-                log.info("----> Add ApplicationHistory : redundant? :"+redundant);
+                log.info("----> Add ApplicationHistory : redundant? : "+redundant);
                 if(!redundant){ getDBHelper().applicationHistoryDao.create(appHist);}
             }
         } catch (SQLException e) {

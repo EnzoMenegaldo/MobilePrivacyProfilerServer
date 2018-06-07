@@ -18,10 +18,9 @@ import com.j256.ormlite.logger.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xmlpull.v1.XmlPullParserException;
 
-import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.associations.DetectedWifi_AccessPoint;
 import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.*;
 import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.xml.MobilePrivacyProfilerDBXMLParser.RefCommand;
-
+// Start of user code additional import
 // End of user code
 
 /**
@@ -119,6 +118,63 @@ public class XMLHelper {
 			e.printStackTrace();
 		}
 		sb.append("\n\t</CONTACTS>\n");
+		sb.append("\n\t<CONTACTORGANISATIONS>");
+		try {
+			List<ContactOrganisation> contactOrganisations = dbContext.contactOrganisationDao.queryForAll();
+			for(ContactOrganisation  contactOrganisation : contactOrganisations){
+				// TODO find if contained by another element, if not put it there
+				boolean isContained = false;
+				if(contactOrganisation.getReferencedContact() != null){
+					isContained = true;
+				}
+				if(!isContained){
+					sb.append("\n");
+					sb.append(contactOrganisation.toXML("\t\t", dbContext));
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sb.append("\n\t</CONTACTORGANISATIONS>\n");
+		sb.append("\n\t<CONTACTIMS>");
+		try {
+			List<ContactIM> contactIMs = dbContext.contactIMDao.queryForAll();
+			for(ContactIM  contactIM : contactIMs){
+				// TODO find if contained by another element, if not put it there
+				boolean isContained = false;
+				if(contactIM.getContact() != null){
+					isContained = true;
+				}
+				if(!isContained){
+					sb.append("\n");
+					sb.append(contactIM.toXML("\t\t", dbContext));
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sb.append("\n\t</CONTACTIMS>\n");
+		sb.append("\n\t<CONTACTEVENTS>");
+		try {
+			List<ContactEvent> contactEvents = dbContext.contactEventDao.queryForAll();
+			for(ContactEvent  contactEvent : contactEvents){
+				// TODO find if contained by another element, if not put it there
+				boolean isContained = false;
+				if(contactEvent.getContact() != null){
+					isContained = true;
+				}
+				if(!isContained){
+					sb.append("\n");
+					sb.append(contactEvent.toXML("\t\t", dbContext));
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sb.append("\n\t</CONTACTEVENTS>\n");
 		sb.append("\n\t<CONTACTPHONENUMBERS>");
 		try {	
 			List<ContactPhoneNumber> contactPhoneNumbers = dbContext.contactPhoneNumberDao.queryForAll();
@@ -189,20 +245,7 @@ public class XMLHelper {
 			e.printStackTrace();
 		}
 		sb.append("\n\t</KNOWNWIFIS>\n");
-/*		sb.append("\n\t<WIFIACCESSPOINTS>");
-		try {	
-			List<WifiAccessPoint> wifiAccessPoints = dbContext.wifiAccessPointDao.queryForAll();
-			for(WifiAccessPoint  wifiAccessPoint : wifiAccessPoints){
-				// TODO find if contained by another element, if not put it there
-					sb.append("\n");
-					sb.append(wifiAccessPoint.toXML("\t\t", dbContext));
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		sb.append("\n\t</WIFIACCESSPOINTS>\n");
-*/		sb.append("\n\t<DETECTEDWIFIS>");
+		sb.append("\n\t<DETECTEDWIFIS>");
 		try {	
 			List<DetectedWifi> detectedWifis = dbContext.detectedWifiDao.queryForAll();
 			for(DetectedWifi  detectedWifi : detectedWifis){
@@ -272,8 +315,14 @@ public class XMLHelper {
 			List<OtherCellData> otherCellDatas = dbContext.otherCellDataDao.queryForAll();
 			for(OtherCellData  otherCellData : otherCellDatas){
 				// TODO find if contained by another element, if not put it there
+				boolean isContained = false;
+				if(otherCellData.getIdentity() != null){
+					isContained = true;
+				}
+				if(!isContained){
 					sb.append("\n");
 					sb.append(otherCellData.toXML("\t\t", dbContext));
+				}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -285,8 +334,14 @@ public class XMLHelper {
 			List<CdmaCellData> cdmaCellDatas = dbContext.cdmaCellDataDao.queryForAll();
 			for(CdmaCellData  cdmaCellData : cdmaCellDatas){
 				// TODO find if contained by another element, if not put it there
+				boolean isContained = false;
+				if(cdmaCellData.getIdentity() != null){
+					isContained = true;
+				}
+				if(!isContained){
 					sb.append("\n");
 					sb.append(cdmaCellData.toXML("\t\t", dbContext));
+				}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -298,8 +353,14 @@ public class XMLHelper {
 			List<NeighboringCellHistory> neighboringCellHistorys = dbContext.neighboringCellHistoryDao.queryForAll();
 			for(NeighboringCellHistory  neighboringCellHistory : neighboringCellHistorys){
 				// TODO find if contained by another element, if not put it there
+				boolean isContained = false;
+				if(neighboringCellHistory.getCells() != null){
+					isContained = true;
+				}
+				if(!isContained){
 					sb.append("\n");
 					sb.append(neighboringCellHistory.toXML("\t\t", dbContext));
+				}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -324,8 +385,14 @@ public class XMLHelper {
 			List<BluetoothLog> bluetoothLogs = dbContext.bluetoothLogDao.queryForAll();
 			for(BluetoothLog  bluetoothLog : bluetoothLogs){
 				// TODO find if contained by another element, if not put it there
+				boolean isContained = false;
+				if(bluetoothLog.getDevice() != null){
+					isContained = true;
+				}
+				if(!isContained){
 					sb.append("\n");
 					sb.append(bluetoothLog.toXML("\t\t", dbContext));
+				}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -429,6 +496,30 @@ public class XMLHelper {
 					log.error("cannot create Contact "+e.getMessage(),e);
 				}
 			}
+			log.info("starting creation of ContactOrganisation...");
+			for(ContactOrganisation contactOrganisation : parser.contactOrganisations){
+				try {
+					dbContext.contactOrganisationDao.create(contactOrganisation);
+				} catch (SQLException e) {
+					log.error("cannot create ContactOrganisation "+e.getMessage(),e);
+				}
+			}
+			log.info("starting creation of ContactIM...");
+			for(ContactIM contactIM : parser.contactIMs){
+				try {
+					dbContext.contactIMDao.create(contactIM);
+				} catch (SQLException e) {
+					log.error("cannot create ContactIM "+e.getMessage(),e);
+				}
+			}
+			log.info("starting creation of ContactEvent...");
+			for(ContactEvent contactEvent : parser.contactEvents){
+				try {
+					dbContext.contactEventDao.create(contactEvent);
+				} catch (SQLException e) {
+					log.error("cannot create ContactEvent "+e.getMessage(),e);
+				}
+			}
 			log.info("starting creation of ContactPhoneNumber...");
 			for(ContactPhoneNumber contactPhoneNumber : parser.contactPhoneNumbers){
 				try {
@@ -461,15 +552,7 @@ public class XMLHelper {
 					log.error("cannot create KnownWifi "+e.getMessage(),e);
 				}
 			}
-/*			log.info("starting creation of WifiAccessPoint...");
-			for(WifiAccessPoint wifiAccessPoint : parser.wifiAccessPoints){
-				try {
-					dbContext.wifiAccessPointDao.create(wifiAccessPoint);
-				} catch (SQLException e) {
-					log.error("cannot create WifiAccessPoint "+e.getMessage(),e);
-				}
-			}
-*/			log.info("starting creation of DetectedWifi...");
+			log.info("starting creation of DetectedWifi...");
 			for(DetectedWifi detectedWifi : parser.detectedWifis){
 				try {
 					dbContext.detectedWifiDao.create(detectedWifi);
@@ -620,6 +703,30 @@ public class XMLHelper {
 					log.error("cannot update Contact "+e.getMessage(),e);
 				}
 			}
+			log.info("starting update DB of ContactOrganisation...");
+			for(ContactOrganisation elem : parser.contactOrganisationsToUpdate){
+				try {
+					dbContext.contactOrganisationDao.update(elem);
+				} catch (SQLException e) {
+					log.error("cannot update ContactOrganisation "+e.getMessage(),e);
+				}
+			}
+			log.info("starting update DB of ContactIM...");
+			for(ContactIM elem : parser.contactIMsToUpdate){
+				try {
+					dbContext.contactIMDao.update(elem);
+				} catch (SQLException e) {
+					log.error("cannot update ContactIM "+e.getMessage(),e);
+				}
+			}
+			log.info("starting update DB of ContactEvent...");
+			for(ContactEvent elem : parser.contactEventsToUpdate){
+				try {
+					dbContext.contactEventDao.update(elem);
+				} catch (SQLException e) {
+					log.error("cannot update ContactEvent "+e.getMessage(),e);
+				}
+			}
 			log.info("starting update DB of ContactPhoneNumber...");
 			for(ContactPhoneNumber elem : parser.contactPhoneNumbersToUpdate){
 				try {
@@ -652,15 +759,7 @@ public class XMLHelper {
 					log.error("cannot update KnownWifi "+e.getMessage(),e);
 				}
 			}
-/*			log.info("starting update DB of WifiAccessPoint...");
-			for(WifiAccessPoint elem : parser.wifiAccessPointsToUpdate){
-				try {
-					dbContext.wifiAccessPointDao.update(elem);
-				} catch (SQLException e) {
-					log.error("cannot update WifiAccessPoint "+e.getMessage(),e);
-				}
-			}
-*/			log.info("starting update DB of DetectedWifi...");
+			log.info("starting update DB of DetectedWifi...");
 			for(DetectedWifi elem : parser.detectedWifisToUpdate){
 				try {
 					dbContext.detectedWifiDao.update(elem);

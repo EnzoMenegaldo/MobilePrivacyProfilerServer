@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 //End of user code
 /**
  * Context class used to simplify the access to the different DAOs of the application
@@ -200,7 +201,8 @@ public class MobilePrivacyProfilerDBHelper {
 	 */
 	public Cell queryCellByCellId(int cellId){
 		//Log.d(TAG,"queryCellByCellId with parameter : "+ cellId);
-		Cell queryCell = new Cell(cellId);
+		Cell queryCell = new Cell();
+		queryCell.setCellId(cellId);
 		log.debug("queryCellByCellId with "+queryCell.getCellId()+" as cellId");
 		try {
 			List<Cell> queryOutput = this.cellDao.queryForMatching(queryCell);
@@ -269,7 +271,7 @@ public class MobilePrivacyProfilerDBHelper {
 			metadata = it.get(0);
 		} else {
 			metadata = new MobilePrivacyProfilerDB_metadata();
-
+			metadata.setUserId(UUID.randomUUID().toString());
 				this.mobilePrivacyProfilerDB_metadataDao.create(metadata);
 		}
         } catch (SQLException e) { log.error("error while getting MobilePrivacyProfilerDB_metadata", e);}
@@ -295,8 +297,8 @@ public class MobilePrivacyProfilerDBHelper {
 	public boolean isRegistredApplicationHistory(ApplicationHistory appHist) {
 
 		ApplicationHistory query = new ApplicationHistory();
-		query.setPackageName(appHist.getPackageName());
-		query.setId(appHist.getId());
+		query.set_id(appHist.get_id());
+		query.setUserId(appHist.getUserId());
 		List<ApplicationHistory> queryOutput = null;
 		try {
 			queryOutput = this.applicationHistoryDao.queryForMatching(query);
