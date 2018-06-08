@@ -334,9 +334,9 @@ public class MobilePrivacyProfilerDBHelper {
 		} catch (SQLException e) { e.printStackTrace(); }
 
 		if (queryOutput.size()==1) {
-			try {
-				dao.delete(queryOutput);
-				dao.create(type.cast(object));
+			try {dao.createOrUpdate(type.cast(object));
+				/*dao.delete(queryOutput);
+				dao.create(type.cast(object));*/
 			} catch (SQLException e) { e.printStackTrace(); }
 			log.info("Updated an "+type.getSimpleName()+" entry in the DB");
 		}

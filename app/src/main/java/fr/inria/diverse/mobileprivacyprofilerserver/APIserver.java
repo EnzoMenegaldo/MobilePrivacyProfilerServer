@@ -1,5 +1,7 @@
 package fr.inria.diverse.mobileprivacyprofilerserver;
 
+
+import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -307,7 +309,7 @@ public class APIserver {
             }
 
         response.status(201);
-            return "Request processed";
+            return "Request processed : "+type.getSimpleName();
 
     }//end method
 
