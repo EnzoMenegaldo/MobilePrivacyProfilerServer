@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = ApplicationUsageStats.class)
-public class ApplicationUsageStats {
+public class ApplicationUsageStats implements DbClass{
 
 	public static Log log = LogFactory.getLog(ApplicationUsageStats.class);
 

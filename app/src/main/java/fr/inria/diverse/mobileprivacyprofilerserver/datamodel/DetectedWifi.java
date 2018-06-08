@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = DetectedWifi.class)
-public class DetectedWifi {
+public class DetectedWifi implements DbClass{
 
 	public static Log log = LogFactory.getLog(DetectedWifi.class);
 

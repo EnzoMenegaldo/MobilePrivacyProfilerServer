@@ -36,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = BluetoothLog.class)
-public class BluetoothLog {
+public class BluetoothLog implements DbClass{
 
 	public static Log log = LogFactory.getLog(BluetoothLog.class);
 

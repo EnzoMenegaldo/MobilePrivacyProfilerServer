@@ -36,7 +36,7 @@ Ie. the device has registered it and was connected to it
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = KnownWifi.class)
-public class KnownWifi {
+public class KnownWifi implements DbClass{
 
 	public static Log log = LogFactory.getLog(KnownWifi.class);
 

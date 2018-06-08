@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = SMS.class)
-public class SMS {
+public class SMS implements DbClass{
 
 	public static Log log = LogFactory.getLog(SMS.class);
 

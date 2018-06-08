@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = CalendarEvent.class)
-public class CalendarEvent {
+public class CalendarEvent implements DbClass{
 
 	public static Log log = LogFactory.getLog(CalendarEvent.class);
 

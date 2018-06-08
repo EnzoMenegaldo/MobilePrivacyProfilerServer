@@ -3,6 +3,8 @@ package fr.inria.diverse.mobileprivacyprofilerserver.datamodel;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.PreparedUpdate;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
@@ -292,20 +294,55 @@ public class MobilePrivacyProfilerDBHelper {
 
 	/**
 	 *
+	 * @param object
+	 * @param type
+	 * @param dao
 	 * @return true is the argument is an entry from DB
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
 	 */
-	public boolean isRegistredApplicationHistory(ApplicationHistory appHist) {
+	public boolean isRegisteredDbClassObject(DbClass object, Class type, Dao dao) throws IllegalAccessException, InstantiationException {
 
-		ApplicationHistory query = new ApplicationHistory();
-		query.set_id(appHist.get_id());
-		query.setUserId(appHist.getUserId());
-		List<ApplicationHistory> queryOutput = null;
+		DbClass query = (DbClass) type.newInstance();
+		query.set_id(object.get_id());
+		query.setUserId(object.getUserId());
+		List queryOutput = null;
 		try {
-			queryOutput = this.applicationHistoryDao.queryForMatching(query);
+			queryOutput = dao.queryForMatching(type.cast(query));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return !queryOutput.isEmpty();
+	}
+
+	/**
+	 * Update the DB with a new version of data from the client
+	 * @param object
+	 * @param type
+	 * @param dao
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 */
+
+	public void updateObjectFromDB(DbClass object, Class type, Dao dao) throws IllegalAccessException, InstantiationException {
+		DbClass query = (DbClass) type.newInstance();
+		query.set_id(object.get_id());
+		query.setUserId(object.getUserId());
+		List queryOutput = null;
+		try {
+			queryOutput = dao.queryForMatching(type.cast(query));
+		} catch (SQLException e) { e.printStackTrace(); }
+
+		if (queryOutput.size()==1) {
+			try {
+				dao.delete(queryOutput);
+				dao.create(type.cast(object));
+			} catch (SQLException e) { e.printStackTrace(); }
+			log.info("Updated an "+type.getSimpleName()+" entry in the DB");
+		}
+		else{
+			log.info("An update of an "+type.getSimpleName()+" entry from DB went wrong");
+		}
 	}
 
 	/**

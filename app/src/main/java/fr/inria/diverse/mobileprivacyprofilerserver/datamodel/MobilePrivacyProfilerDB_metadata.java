@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = MobilePrivacyProfilerDB_metadata.class)
-public class MobilePrivacyProfilerDB_metadata {
+public class MobilePrivacyProfilerDB_metadata implements DbClass{
 
 	public static Log log = LogFactory.getLog(MobilePrivacyProfilerDB_metadata.class);
 

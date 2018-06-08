@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = Geolocation.class)
-public class Geolocation {
+public class Geolocation implements DbClass{
 
 	public static Log log = LogFactory.getLog(Geolocation.class);
 
