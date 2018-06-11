@@ -41,6 +41,7 @@ public class DetectedWifi implements DbClass{
 
 	public static final String XML_DETECTEDWIFI = "DETECTEDWIFI";
 	public static final String XML_ATT_ID = "id";
+	public static final String XML_ATT_CLIENT_ID = "client_id";
 	public static final String XML_ATT_STARTDETECTIONDATE = "startDetectionDate";
 	public static final String XML_ATT_ENDDETECTIONDATE = "endDetectionDate";
 	public static final String XML_ATT_HASCONNECTED = "hasConnected";
@@ -104,12 +105,18 @@ approximate time where the WifiAccessPoint was not received anymore */
 		this.userId = userId;
 	}
 
+	/**
+	 * raw_id from client converted as part of a primary key in combination of user UUID
+	 */
+	@DatabaseField
+	protected int client_id;
+
 	public int get_id() {
-		return _id;
+		return client_id;
 	}
 	@JsonProperty
 	public void set_id(int id) {
-		this._id = id;
+		this.client_id = id;
 	}
 
 	public int getId() {
@@ -192,6 +199,11 @@ approximate time where the WifiAccessPoint was not received anymore */
 		sb.append(" "+XML_ATT_ID+"=\"");
 		sb.append(this._id);
     	sb.append("\" ");
+		sb.append(" ");
+		sb.append(XML_ATT_CLIENT_ID);
+		sb.append("=\"");
+		sb.append(this.client_id);
+		sb.append("\" ");
 		sb.append(" ");
     	sb.append(XML_ATT_STARTDETECTIONDATE);
     	sb.append("=\"");

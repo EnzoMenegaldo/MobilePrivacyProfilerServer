@@ -41,6 +41,7 @@ public class Contact implements DbClass{
 
 	public static final String XML_CONTACT = "CONTACT";
 	public static final String XML_ATT_ID = "id";
+	public static final String XML_ATT_CLIENT_ID = "client_id";
 	public static final String XML_ATT_SURNAME = "surname";
 	public static final String XML_ATT_FIRSTNAME = "firstName";
 	public static final String XML_ATT_MIDDLENAME = "middleName";
@@ -161,12 +162,18 @@ public class Contact implements DbClass{
 		this.userId = userId;
 	}
 
+	/**
+	 * raw_id from client converted as part of a primary key in combination of user UUID
+	 */
+	@DatabaseField
+	protected int client_id;
+
 	public int get_id() {
-		return _id;
+		return client_id;
 	}
 	@JsonProperty
 	public void set_id(int id) {
-		this._id = id;
+		this.client_id = id;
 	}
 
 	public int getId() {
@@ -333,6 +340,11 @@ public class Contact implements DbClass{
 		sb.append(" "+XML_ATT_ID+"=\"");
 		sb.append(this._id);
     	sb.append("\" ");
+		sb.append(" ");
+		sb.append(XML_ATT_CLIENT_ID);
+		sb.append("=\"");
+		sb.append(this.client_id);
+		sb.append("\" ");
 		sb.append(" ");
     	sb.append(XML_ATT_SURNAME);
     	sb.append("=\"");

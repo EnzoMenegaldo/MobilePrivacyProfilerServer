@@ -334,6 +334,8 @@ public class MobilePrivacyProfilerDBHelper {
 		} catch (SQLException e) { e.printStackTrace(); }
 
 		if (queryOutput.size()==1) {
+			int id =((DbClass) queryOutput.get(0)).getId();
+			object.setId(id);
 			try {dao.createOrUpdate(type.cast(object));
 				/*dao.delete(queryOutput);
 				dao.create(type.cast(object));*/

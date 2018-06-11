@@ -41,6 +41,7 @@ public class MobilePrivacyProfilerDB_metadata implements DbClass{
 
 	public static final String XML_MOBILEPRIVACYPROFILERDB_METADATA = "MOBILEPRIVACYPROFILERDB_METADATA";
 	public static final String XML_ATT_ID = "id";
+	public static final String XML_ATT_CLIENT_ID = "client_id";
 	public static final String XML_ATT_LASTTRANSMISSIONDATE = "lastTransmissionDate";
 	public static final String XML_ATT_LASTSCANINSTALLEDAPPLICATIONS = "lastScanInstalledApplications";
 	public static final String XML_ATT_LASTSCANAPPUSAGE = "lastScanAppUsage";
@@ -62,7 +63,7 @@ public class MobilePrivacyProfilerDB_metadata implements DbClass{
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
-	
+
 
 	@DatabaseField
 	protected java.util.Date lastTransmissionDate;
@@ -101,12 +102,18 @@ public class MobilePrivacyProfilerDB_metadata implements DbClass{
 		this.lastContactScan = lastContactScan;
 	}
 
+	/**
+	 * raw_id from client converted as part of a primary key in combination of user UUID
+	 */
+	@DatabaseField
+	protected int client_id;
+
 	public int get_id() {
-		return _id;
+		return client_id;
 	}
 	@JsonProperty
 	public void set_id(int id) {
-		this._id = id;
+		this.client_id = id;
 	}
 
 	public int getId() {
@@ -186,7 +193,12 @@ public class MobilePrivacyProfilerDB_metadata implements DbClass{
 		sb.append(this._id);
     	sb.append("\" ");
 		sb.append(" ");
-    	sb.append(XML_ATT_LASTTRANSMISSIONDATE);
+		sb.append(XML_ATT_CLIENT_ID);
+		sb.append("=\"");
+		sb.append(this.client_id);
+		sb.append("\" ");
+		sb.append(" ");
+		sb.append(XML_ATT_LASTTRANSMISSIONDATE);
     	sb.append("=\"");
 		sb.append(this.lastTransmissionDate);
     	sb.append("\" ");
