@@ -91,7 +91,6 @@ public class DBTools {
 		log.debug("databaseInitialisation() - Start");
 		
 		// if you need to create the table
-		TableUtils.createTable(connectionSource, ApplicationHistory.class);
 		TableUtils.createTable(connectionSource, MobilePrivacyProfilerDB_metadata.class);
 		TableUtils.createTable(connectionSource, ApplicationHistory.class);
 		TableUtils.createTable(connectionSource, ApplicationUsageStats.class);

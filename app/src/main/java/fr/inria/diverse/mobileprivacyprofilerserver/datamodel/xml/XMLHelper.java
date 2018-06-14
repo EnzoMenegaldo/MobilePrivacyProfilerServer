@@ -21,26 +21,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.*;
 import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.xml.MobilePrivacyProfilerDBXMLParser.RefCommand;
 // Start of user code additional import
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.SQLException;
-import java.util.List;
-import com.j256.ormlite.logger.Log;
-import org.apache.commons.logging.LogFactory;
-import org.xmlpull.v1.XmlPullParserException;
 
-import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.*;
-import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.xml.MobilePrivacyProfilerDBXMLParser.RefCommand;
-// Start of user code additional import
 // End of user code
 
 /**
