@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = MobilePrivacyProfilerDB_metadata.class)
-public class MobilePrivacyProfilerDB_metadata implements DbClass{
+public class MobilePrivacyProfilerDB_metadata implements DbClass {
 
 	public static Log log = LogFactory.getLog(MobilePrivacyProfilerDB_metadata.class);
 
@@ -63,7 +63,7 @@ public class MobilePrivacyProfilerDB_metadata implements DbClass{
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
-
+	
 
 	@DatabaseField
 	protected java.util.Date lastTransmissionDate;
@@ -87,6 +87,9 @@ public class MobilePrivacyProfilerDB_metadata implements DbClass{
 	protected java.util.Date lastContactScan;
 	
 
+	@DatabaseField
+	protected int client_id;
+
 	// Start of user code MobilePrivacyProfilerDB_metadata additional user properties
 	// End of user code
 	
@@ -100,14 +103,11 @@ public class MobilePrivacyProfilerDB_metadata implements DbClass{
 		this.lastCallScan = lastCallScan;
 		this.userId = userId;
 		this.lastContactScan = lastContactScan;
-	}
+	} 
 
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	@DatabaseField
-	protected int client_id;
-
 	public int get_id() {
 		return client_id;
 	}
@@ -198,7 +198,7 @@ public class MobilePrivacyProfilerDB_metadata implements DbClass{
 		sb.append(this.client_id);
 		sb.append("\" ");
 		sb.append(" ");
-		sb.append(XML_ATT_LASTTRANSMISSIONDATE);
+    	sb.append(XML_ATT_LASTTRANSMISSIONDATE);
     	sb.append("=\"");
 		sb.append(this.lastTransmissionDate);
     	sb.append("\" ");

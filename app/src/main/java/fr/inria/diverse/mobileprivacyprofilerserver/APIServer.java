@@ -1,5 +1,5 @@
+/*  */
 package fr.inria.diverse.mobileprivacyprofilerserver;
-
 
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,18 +21,25 @@ import java.util.List;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+// Start of user code additional import for APIserver :
+// End of user code
 
-public class APIserver {
-    private static MobilePrivacyProfilerDBHelper  dbHelper;
+/** 
+  *  
+  */ 
+
+public class APIServer {
+
+private static MobilePrivacyProfilerDBHelper  dbHelper;
     // Initialising log management
-    private static Log log = LogFactory.getLog(Test.class);
+    private static Log log = LogFactory.getLog(APIServer.class);
 
     public static void main(String[] args) {
 
 
     get("/hello", (request, response) -> "Hello World");
 
-    post("/Metadata",(request, response)->{
+	post("/Metadata",(request, response)->{
 
             //convert the request.body() into a List of the received object
             List<MobilePrivacyProfilerDB_metadata> list = deserializeList(request.body(),MobilePrivacyProfilerDB_metadata.class,response);
@@ -40,19 +47,19 @@ public class APIserver {
             //store the objects into the DB
             String stringResponse = storeData(list,MobilePrivacyProfilerDB_metadata.class,getDBHelper().mobilePrivacyProfilerDB_metadataDao,response);
             return stringResponse;
-        });
-
-    post("/ApplicationHistory",(request, response)->{
-
-        //convert the request.body() into a List<ApplicationHistory>
-        List<ApplicationHistory> applicationHistories = deserializeList(request.body(),ApplicationHistory.class,response);
-
-        //store the objects into the DB
-        String stringResponse = storeData(applicationHistories,ApplicationHistory.class,getDBHelper().applicationHistoryDao,response);
-    return stringResponse;
     });
 
-    post("/ApplicationUsageStats",(request, response)->{
+	post("/ApplicationHistory",(request, response)->{
+        Class type = ApplicationHistory.class;
+        //convert the request.body() into a List of the received object
+        List<ApplicationHistory> list = deserializeList(request.body(),type,response);
+
+        //store the objects into the DB
+        String stringResponse = storeData(list,type,getDBHelper().applicationHistoryDao,response);
+        return stringResponse;
+    });
+
+	post("/ApplicationUsageStats",(request, response)->{
         Class type = ApplicationUsageStats.class;
         //convert the request.body() into a List of the received object
         List<ApplicationUsageStats> list = deserializeList(request.body(),type,response);
@@ -62,7 +69,7 @@ public class APIserver {
         return stringResponse;
     });
 
-    post("/Authentification",(request, response)->{
+	post("/Authentification",(request, response)->{
         Class type = Authentification.class;
         //convert the request.body() into a List of the received object
         List<Authentification> list = deserializeList(request.body(),type,response);
@@ -72,89 +79,7 @@ public class APIserver {
         return stringResponse;
     });
 
-    post("/BatteryUsage",(request, response)->{
-        Class type = BatteryUsage.class;
-        //convert the request.body() into a List of the received object
-        List<BatteryUsage> list = deserializeList(request.body(),type,response);
-
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().batteryUsageDao,response);
-        return stringResponse;
-    });
-
-
-    post("/BluetoothDevice",(request, response)->{
-        Class type = BluetoothDevice.class;
-        //convert the request.body() into a List of the received object
-        List<BluetoothDevice> list = deserializeList(request.body(),type,response);
-
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().bluetoothDeviceDao,response);
-        return stringResponse;
-    });
-
-    post("/BluetoothLog",(request, response)->{
-        Class type = BluetoothLog.class;
-        //convert the request.body() into a List of the received object
-        List<BluetoothLog> list = deserializeList(request.body(),type,response);
-
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().bluetoothLogDao,response);
-        return stringResponse;
-    });
-
-    post("/CalendarEvent",(request, response)->{
-        Class type = CalendarEvent.class;
-        //convert the request.body() into a List of the received object
-        List<CalendarEvent> list = deserializeList(request.body(),type,response);
-
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().calendarEventDao,response);
-        return stringResponse;
-    });
-
-    post("/Cell",(request, response)->{
-        Class type = Cell.class;
-        //convert the request.body() into a List of the received object
-        List<Cell> list = deserializeList(request.body(),type,response);
-
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().cellDao,response);
-        return stringResponse;
-    });
-
-    post("/CdmaCellData",(request, response)->{
-        Class type = CdmaCellData.class;
-        //convert the request.body() into a List of the received object
-        List<CdmaCellData> list = deserializeList(request.body(),type,response);
-
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().cdmaCellDataDao,response);
-        return stringResponse;
-    });
-
-
-    post("/OtherCellData",(request, response)->{
-        Class type = OtherCellData.class;
-        //convert the request.body() into a List of the received object
-        List<OtherCellData> list = deserializeList(request.body(),type,response);
-
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().otherCellDataDao,response);
-        return stringResponse;
-    });
-
-    post("/NeighboringCellHistory",(request, response)->{
-        Class type = NeighboringCellHistory.class;
-        //convert the request.body() into a List of the received object
-        List<NeighboringCellHistory> list = deserializeList(request.body(),type,response);
-
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().neighboringCellHistoryDao,response);
-        return stringResponse;
-    });
-
-    post("/Contact",(request, response)->{
+	post("/Contact",(request, response)->{
         Class type = Contact.class;
         //convert the request.body() into a List of the received object
         List<Contact> list = deserializeList(request.body(),type,response);
@@ -164,37 +89,7 @@ public class APIserver {
         return stringResponse;
     });
 
-    post("/ContactEmail",(request, response)->{
-        Class type = ContactEmail.class;
-        //convert the request.body() into a List of the received object
-        List<ContactEmail> list = deserializeList(request.body(),type,response);
-
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().contactEmailDao,response);
-        return stringResponse;
-    });
-
-    post("/ContactEvent",(request, response)->{
-        Class type = ContactEvent.class;
-        //convert the request.body() into a List of the received object
-        List<ContactEvent> list = deserializeList(request.body(),type,response);
-
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().contactEventDao,response);
-        return stringResponse;
-    });
-
-    post("/ContactIM",(request, response)->{
-        Class type = ContactIM.class;
-        //convert the request.body() into a List of the received object
-        List<ContactIM> list = deserializeList(request.body(),type,response);
-
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().contactIMDao,response);
-        return stringResponse;
-    });
-
-    post("/ContactOrganisation",(request, response)->{
+	post("/ContactOrganisation",(request, response)->{
         Class type = ContactOrganisation.class;
         //convert the request.body() into a List of the received object
         List<ContactOrganisation> list = deserializeList(request.body(),type,response);
@@ -204,7 +99,27 @@ public class APIserver {
         return stringResponse;
     });
 
-    post("/ContactPhoneNumber",(request, response)->{
+	post("/ContactIM",(request, response)->{
+        Class type = ContactIM.class;
+        //convert the request.body() into a List of the received object
+        List<ContactIM> list = deserializeList(request.body(),type,response);
+
+        //store the objects into the DB
+        String stringResponse = storeData(list,type,getDBHelper().contactIMDao,response);
+        return stringResponse;
+    });
+
+	post("/ContactEvent",(request, response)->{
+        Class type = ContactEvent.class;
+        //convert the request.body() into a List of the received object
+        List<ContactEvent> list = deserializeList(request.body(),type,response);
+
+        //store the objects into the DB
+        String stringResponse = storeData(list,type,getDBHelper().contactEventDao,response);
+        return stringResponse;
+    });
+
+	post("/ContactPhoneNumber",(request, response)->{
         Class type = ContactPhoneNumber.class;
         //convert the request.body() into a List of the received object
         List<ContactPhoneNumber> list = deserializeList(request.body(),type,response);
@@ -214,7 +129,7 @@ public class APIserver {
         return stringResponse;
     });
 
-    post("/ContactPhysicalAddress",(request, response)->{
+	post("/ContactPhysicalAddress",(request, response)->{
         Class type = ContactPhysicalAddress.class;
         //convert the request.body() into a List of the received object
         List<ContactPhysicalAddress> list = deserializeList(request.body(),type,response);
@@ -224,17 +139,17 @@ public class APIserver {
         return stringResponse;
     });
 
-    post("/DetectedWifi",(request, response)->{
-        Class type = DetectedWifi.class;
+	post("/ContactEmail",(request, response)->{
+        Class type = ContactEmail.class;
         //convert the request.body() into a List of the received object
-        List<DetectedWifi> list = deserializeList(request.body(),type,response);
+        List<ContactEmail> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().detectedWifiDao,response);
+        String stringResponse = storeData(list,type,getDBHelper().contactEmailDao,response);
         return stringResponse;
     });
 
-    post("/KnownWifi",(request, response)->{
+	post("/KnownWifi",(request, response)->{
         Class type = KnownWifi.class;
         //convert the request.body() into a List of the received object
         List<KnownWifi> list = deserializeList(request.body(),type,response);
@@ -244,7 +159,17 @@ public class APIserver {
         return stringResponse;
     });
 
-    post("/Geolocation",(request, response)->{
+	post("/DetectedWifi",(request, response)->{
+        Class type = DetectedWifi.class;
+        //convert the request.body() into a List of the received object
+        List<DetectedWifi> list = deserializeList(request.body(),type,response);
+
+        //store the objects into the DB
+        String stringResponse = storeData(list,type,getDBHelper().detectedWifiDao,response);
+        return stringResponse;
+    });
+
+	post("/Geolocation",(request, response)->{
         Class type = Geolocation.class;
         //convert the request.body() into a List of the received object
         List<Geolocation> list = deserializeList(request.body(),type,response);
@@ -254,7 +179,17 @@ public class APIserver {
         return stringResponse;
     });
 
-    post("/PhoneCallLog",(request, response)->{
+	post("/CalendarEvent",(request, response)->{
+        Class type = CalendarEvent.class;
+        //convert the request.body() into a List of the received object
+        List<CalendarEvent> list = deserializeList(request.body(),type,response);
+
+        //store the objects into the DB
+        String stringResponse = storeData(list,type,getDBHelper().calendarEventDao,response);
+        return stringResponse;
+    });
+
+	post("/PhoneCallLog",(request, response)->{
         Class type = PhoneCallLog.class;
         //convert the request.body() into a List of the received object
         List<PhoneCallLog> list = deserializeList(request.body(),type,response);
@@ -264,7 +199,67 @@ public class APIserver {
         return stringResponse;
     });
 
-    post("/SMS",(request, response)->{
+	post("/Cell",(request, response)->{
+        Class type = Cell.class;
+        //convert the request.body() into a List of the received object
+        List<Cell> list = deserializeList(request.body(),type,response);
+
+        //store the objects into the DB
+        String stringResponse = storeData(list,type,getDBHelper().cellDao,response);
+        return stringResponse;
+    });
+
+	post("/OtherCellData",(request, response)->{
+        Class type = OtherCellData.class;
+        //convert the request.body() into a List of the received object
+        List<OtherCellData> list = deserializeList(request.body(),type,response);
+
+        //store the objects into the DB
+        String stringResponse = storeData(list,type,getDBHelper().otherCellDataDao,response);
+        return stringResponse;
+    });
+
+	post("/CdmaCellData",(request, response)->{
+        Class type = CdmaCellData.class;
+        //convert the request.body() into a List of the received object
+        List<CdmaCellData> list = deserializeList(request.body(),type,response);
+
+        //store the objects into the DB
+        String stringResponse = storeData(list,type,getDBHelper().cdmaCellDataDao,response);
+        return stringResponse;
+    });
+
+	post("/NeighboringCellHistory",(request, response)->{
+        Class type = NeighboringCellHistory.class;
+        //convert the request.body() into a List of the received object
+        List<NeighboringCellHistory> list = deserializeList(request.body(),type,response);
+
+        //store the objects into the DB
+        String stringResponse = storeData(list,type,getDBHelper().neighboringCellHistoryDao,response);
+        return stringResponse;
+    });
+
+	post("/BluetoothDevice",(request, response)->{
+        Class type = BluetoothDevice.class;
+        //convert the request.body() into a List of the received object
+        List<BluetoothDevice> list = deserializeList(request.body(),type,response);
+
+        //store the objects into the DB
+        String stringResponse = storeData(list,type,getDBHelper().bluetoothDeviceDao,response);
+        return stringResponse;
+    });
+
+	post("/BluetoothLog",(request, response)->{
+        Class type = BluetoothLog.class;
+        //convert the request.body() into a List of the received object
+        List<BluetoothLog> list = deserializeList(request.body(),type,response);
+
+        //store the objects into the DB
+        String stringResponse = storeData(list,type,getDBHelper().bluetoothLogDao,response);
+        return stringResponse;
+    });
+
+	post("/SMS",(request, response)->{
         Class type = SMS.class;
         //convert the request.body() into a List of the received object
         List<SMS> list = deserializeList(request.body(),type,response);
@@ -274,7 +269,17 @@ public class APIserver {
         return stringResponse;
     });
 
-    post("/WebHistory",(request, response)->{
+	post("/BatteryUsage",(request, response)->{
+        Class type = BatteryUsage.class;
+        //convert the request.body() into a List of the received object
+        List<BatteryUsage> list = deserializeList(request.body(),type,response);
+
+        //store the objects into the DB
+        String stringResponse = storeData(list,type,getDBHelper().batteryUsageDao,response);
+        return stringResponse;
+    });
+
+	post("/WebHistory",(request, response)->{
         Class type = WebHistory.class;
         //convert the request.body() into a List of the received object
         List<WebHistory> list = deserializeList(request.body(),type,response);
@@ -283,7 +288,6 @@ public class APIserver {
         String stringResponse = storeData(list,type,getDBHelper().webHistoryDao,response);
         return stringResponse;
     });
-
 
     }//end main
 
@@ -313,7 +317,6 @@ public class APIserver {
 
     }//end method
 
-
     /**
      * Use Jackson to deserialize a String into List<deserialisationClassObject>
      * @param jsonArg
@@ -332,8 +335,7 @@ public class APIserver {
                 e.printStackTrace();
                 response.status(400);
             }
-            //convert List<jsonString> into List<ApplicationHistory>
-
+            //convert List<jsonString> into List<deserialisationClass>
 
             for (String json : list) {
                 outPutList.add(deserialisationClass.cast(deserialize(json, deserialisationClass, response)));
@@ -366,7 +368,6 @@ public class APIserver {
 
         return deserializedObject;
     }
-
 
     /**
      * take in a single json String to parse it into a List<String>
@@ -468,5 +469,4 @@ public class APIserver {
         return dbHelper;
     }
 
-
-}//end APIserver
+}//end class

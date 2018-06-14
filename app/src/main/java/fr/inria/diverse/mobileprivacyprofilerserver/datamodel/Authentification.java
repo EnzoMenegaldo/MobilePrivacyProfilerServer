@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = Authentification.class)
-public class Authentification implements DbClass{
+public class Authentification implements DbClass {
 
 	public static Log log = LogFactory.getLog(Authentification.class);
 
@@ -77,7 +77,10 @@ public class Authentification implements DbClass{
 
 	@DatabaseField
 	protected java.lang.String userId;
+	
 
+	@DatabaseField
+	protected int client_id;
 
 	// Start of user code Authentification additional user properties
 	// End of user code
@@ -89,14 +92,11 @@ public class Authentification implements DbClass{
 		this.name = name;
 		this.type = type;
 		this.userId = userId;
-	}
+	} 
 
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	@DatabaseField
-	protected int client_id;
-
 	public int get_id() {
 		return client_id;
 	}
@@ -166,7 +166,7 @@ public class Authentification implements DbClass{
 		sb.append(this.client_id);
 		sb.append("\" ");
 		sb.append(" ");
-		sb.append(XML_ATT_PACKAGENAME);
+    	sb.append(XML_ATT_PACKAGENAME);
     	sb.append("=\"");
 		sb.append(StringEscapeUtils.escapeXml(this.packageName));
     	sb.append("\" ");

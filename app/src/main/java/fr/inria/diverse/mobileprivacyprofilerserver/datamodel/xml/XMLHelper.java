@@ -1,5 +1,25 @@
 /*  */
 package fr.inria.diverse.mobileprivacyprofilerserver.datamodel.xml;
+
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
+import java.util.List;
+import com.j256.ormlite.logger.Log;
+import org.apache.commons.logging.LogFactory;
+import org.xmlpull.v1.XmlPullParserException;
+
+import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.*;
+import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.xml.MobilePrivacyProfilerDBXMLParser.RefCommand;
 // Start of user code additional import
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -119,7 +139,7 @@ public class XMLHelper {
 		}
 		sb.append("\n\t</CONTACTS>\n");
 		sb.append("\n\t<CONTACTORGANISATIONS>");
-		try {
+		try {	
 			List<ContactOrganisation> contactOrganisations = dbContext.contactOrganisationDao.queryForAll();
 			for(ContactOrganisation  contactOrganisation : contactOrganisations){
 				// TODO find if contained by another element, if not put it there
@@ -138,7 +158,7 @@ public class XMLHelper {
 		}
 		sb.append("\n\t</CONTACTORGANISATIONS>\n");
 		sb.append("\n\t<CONTACTIMS>");
-		try {
+		try {	
 			List<ContactIM> contactIMs = dbContext.contactIMDao.queryForAll();
 			for(ContactIM  contactIM : contactIMs){
 				// TODO find if contained by another element, if not put it there
@@ -157,7 +177,7 @@ public class XMLHelper {
 		}
 		sb.append("\n\t</CONTACTIMS>\n");
 		sb.append("\n\t<CONTACTEVENTS>");
-		try {
+		try {	
 			List<ContactEvent> contactEvents = dbContext.contactEventDao.queryForAll();
 			for(ContactEvent  contactEvent : contactEvents){
 				// TODO find if contained by another element, if not put it there

@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = CalendarEvent.class)
-public class CalendarEvent implements DbClass{
+public class CalendarEvent implements DbClass {
 
 	public static Log log = LogFactory.getLog(CalendarEvent.class);
 
@@ -87,7 +87,10 @@ public class CalendarEvent implements DbClass{
 
 	@DatabaseField
 	protected java.lang.String userId;
+	
 
+	@DatabaseField
+	protected int client_id;
 
 	// Start of user code CalendarEvent additional user properties
 	// End of user code
@@ -102,14 +105,11 @@ public class CalendarEvent implements DbClass{
 		this.participants = participants;
 		this.eventId = eventId;
 		this.userId = userId;
-	}
+	} 
 
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	@DatabaseField
-	protected int client_id;
-
 	public int get_id() {
 		return client_id;
 	}

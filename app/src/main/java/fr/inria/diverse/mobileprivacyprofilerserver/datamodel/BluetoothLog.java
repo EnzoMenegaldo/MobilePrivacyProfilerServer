@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collection;
 
-import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.MobilePrivacyProfilerDBHelper;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = BluetoothLog.class)
-public class BluetoothLog implements DbClass{
+public class BluetoothLog implements DbClass {
 
 	public static Log log = LogFactory.getLog(BluetoothLog.class);
 
@@ -73,11 +72,14 @@ public class BluetoothLog implements DbClass{
 
 	@DatabaseField
 	protected java.lang.String userId;
-
+	
 
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	// @JsonManagedReference(value="bluetoothdevice_bluetoothlog")
 	protected BluetoothDevice device;
+
+	@DatabaseField
+	protected int client_id;
 
 	// Start of user code BluetoothLog additional user properties
 	// End of user code
@@ -88,14 +90,11 @@ public class BluetoothLog implements DbClass{
 		this.date = date;
 		this.connected = connected;
 		this.userId = userId;
-	}
+	} 
 
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	@DatabaseField
-	protected int client_id;
-
 	public int get_id() {
 		return client_id;
 	}
@@ -176,7 +175,7 @@ public class BluetoothLog implements DbClass{
 		sb.append(this.client_id);
 		sb.append("\" ");
 		sb.append(" ");
-		sb.append(XML_ATT_DATE);
+    	sb.append(XML_ATT_DATE);
     	sb.append("=\"");
 		sb.append(StringEscapeUtils.escapeXml(this.date));
     	sb.append("\" ");

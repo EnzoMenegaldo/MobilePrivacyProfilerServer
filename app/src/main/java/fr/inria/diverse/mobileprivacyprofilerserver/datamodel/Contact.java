@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = Contact.class)
-public class Contact implements DbClass{
+public class Contact implements DbClass {
 
 	public static Log log = LogFactory.getLog(Contact.class);
 
@@ -116,7 +116,7 @@ public class Contact implements DbClass{
 
 	@DatabaseField
 	protected java.lang.String userId;
-
+	
 
 	@ForeignCollectionField(eager = false, foreignFieldName = "contact")
 	@JsonIgnore
@@ -142,6 +142,9 @@ public class Contact implements DbClass{
 	@JsonIgnore
 	protected ForeignCollection<ContactEvent> contactEvent;
 
+	@DatabaseField
+	protected int client_id;
+
 	// Start of user code Contact additional user properties
 	// End of user code
 	
@@ -160,14 +163,11 @@ public class Contact implements DbClass{
 		this.website = website;
 		this.scanTimeStamp = scanTimeStamp;
 		this.userId = userId;
-	}
+	} 
 
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	@DatabaseField
-	protected int client_id;
-
 	public int get_id() {
 		return client_id;
 	}
@@ -297,7 +297,7 @@ public class Contact implements DbClass{
 	}
 	
 
-
+			
 	public ContactOrganisation getContactOrganisation() {
 		try {
 			if(contactOrganisation_mayNeedDBRefresh && _contextDB != null){
@@ -428,7 +428,7 @@ public class Contact implements DbClass{
 				sb.append("\n"+ref.toXML(indent+"\t\t", contextDB));
 	    	}
 		}
-		sb.append("</"+XML_REF_EMAILS+">");
+		sb.append("</"+XML_REF_EMAILS+">");		
 		if(this.contactOrganisation!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_CONTACTORGANISATION+">");
 			sb.append(this.contactOrganisation.getId());

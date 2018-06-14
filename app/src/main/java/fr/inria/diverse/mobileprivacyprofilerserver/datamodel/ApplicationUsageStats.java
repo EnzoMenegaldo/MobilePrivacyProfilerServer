@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = ApplicationUsageStats.class)
-public class ApplicationUsageStats implements DbClass{
+public class ApplicationUsageStats implements DbClass {
 
 	public static Log log = LogFactory.getLog(ApplicationUsageStats.class);
 
@@ -88,11 +88,14 @@ public class ApplicationUsageStats implements DbClass{
 
 	@DatabaseField
 	protected java.lang.String userId;
-
+	
 
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	// @JsonManagedReference(value="applicationhistory_applicationusagestats")
 	protected ApplicationHistory application;
+
+	@DatabaseField
+	protected int client_id;
 
 	// Start of user code ApplicationUsageStats additional user properties
 	// End of user code
@@ -106,14 +109,11 @@ public class ApplicationUsageStats implements DbClass{
 		this.lastTimeStamp = lastTimeStamp;
 		this.requestedInterval = requestedInterval;
 		this.userId = userId;
-	}
+	} 
 
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	@DatabaseField
-	protected int client_id;
-
 	public int get_id() {
 		return client_id;
 	}

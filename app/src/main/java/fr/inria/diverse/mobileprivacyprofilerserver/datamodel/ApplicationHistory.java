@@ -70,11 +70,14 @@ public class ApplicationHistory implements DbClass {
 
 	@DatabaseField
 	protected java.lang.String userId;
-
+	
 
 	@ForeignCollectionField(eager = false, foreignFieldName = "application")
 	@JsonIgnore
 	protected ForeignCollection<ApplicationUsageStats> usageStats;
+
+	@DatabaseField
+	protected int client_id;
 
 	// Start of user code ApplicationHistory additional user properties
 	// End of user code
@@ -85,14 +88,11 @@ public class ApplicationHistory implements DbClass {
 		this.appName = appName;
 		this.packageName = packageName;
 		this.userId = userId;
-	}
+	} 
 
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	@DatabaseField
-	protected int client_id;
-
 	public int get_id() {
 		return client_id;
 	}
@@ -145,7 +145,7 @@ public class ApplicationHistory implements DbClass {
 	}
 	
 
-
+			
 
 
 
@@ -185,7 +185,7 @@ public class ApplicationHistory implements DbClass {
 				sb.append("\n"+ref.toXML(indent+"\t\t", contextDB));
 	    	}
 		}
-		sb.append("</"+XML_REF_USAGESTATS+">");
+		sb.append("</"+XML_REF_USAGESTATS+">");		
 		// TODO deal with other case
 
 		sb.append("</"+XML_APPLICATIONHISTORY+">");

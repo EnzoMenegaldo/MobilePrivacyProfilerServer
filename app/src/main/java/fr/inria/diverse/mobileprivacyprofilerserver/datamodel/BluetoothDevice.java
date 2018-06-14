@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = BluetoothDevice.class)
-public class BluetoothDevice implements DbClass{
+public class BluetoothDevice implements DbClass {
 
 	public static Log log = LogFactory.getLog(BluetoothDevice.class);
 
@@ -75,11 +75,14 @@ public class BluetoothDevice implements DbClass{
 
 	@DatabaseField
 	protected java.lang.String userId;
-
+	
 
 	@ForeignCollectionField(eager = false, foreignFieldName = "device")
 	@JsonIgnore
 	protected ForeignCollection<BluetoothLog> bluetoothLog;
+
+	@DatabaseField
+	protected int client_id;
 
 	// Start of user code BluetoothDevice additional user properties
 	// End of user code
@@ -91,14 +94,11 @@ public class BluetoothDevice implements DbClass{
 		this.name = name;
 		this.type = type;
 		this.userId = userId;
-	}
+	} 
 
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	@DatabaseField
-	protected int client_id;
-
 	public int get_id() {
 		return client_id;
 	}

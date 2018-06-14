@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = DetectedWifi.class)
-public class DetectedWifi implements DbClass{
+public class DetectedWifi implements DbClass {
 
 	public static Log log = LogFactory.getLog(DetectedWifi.class);
 
@@ -86,11 +86,14 @@ approximate time where the WifiAccessPoint was not received anymore */
 
 	@DatabaseField
 	protected java.lang.String userId;
-
+	
 
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	// @JsonManagedReference(value="knownwifi_detectedwifi")
 	protected KnownWifi knownWifi;
+
+	@DatabaseField
+	protected int client_id;
 
 	// Start of user code DetectedWifi additional user properties
 	// End of user code
@@ -103,14 +106,11 @@ approximate time where the WifiAccessPoint was not received anymore */
 		this.hasConnected = hasConnected;
 		this.ssid = ssid;
 		this.userId = userId;
-	}
+	} 
 
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	@DatabaseField
-	protected int client_id;
-
 	public int get_id() {
 		return client_id;
 	}

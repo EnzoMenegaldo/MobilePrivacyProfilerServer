@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = Geolocation.class)
-public class Geolocation implements DbClass{
+public class Geolocation implements DbClass {
 
 	public static Log log = LogFactory.getLog(Geolocation.class);
 
@@ -79,7 +79,10 @@ public class Geolocation implements DbClass{
 
 	@DatabaseField
 	protected java.lang.String userId;
+	
 
+	@DatabaseField
+	protected int client_id;
 
 	// Start of user code Geolocation additional user properties
 	// End of user code
@@ -92,14 +95,11 @@ public class Geolocation implements DbClass{
 		this.precision = precision;
 		this.altitude = altitude;
 		this.userId = userId;
-	}
+	} 
 
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	@DatabaseField
-	protected int client_id;
-
 	public int get_id() {
 		return client_id;
 	}

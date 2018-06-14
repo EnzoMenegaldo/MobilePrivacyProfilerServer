@@ -36,7 +36,7 @@ Ie. the device has registered it and was connected to it
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = KnownWifi.class)
-public class KnownWifi implements DbClass{
+public class KnownWifi implements DbClass {
 
 	public static Log log = LogFactory.getLog(KnownWifi.class);
 
@@ -75,11 +75,14 @@ so we need to check how this data is managed and have a better model */
 
 	@DatabaseField
 	protected java.lang.String userId;
-
+	
 
 	@ForeignCollectionField(eager = false, foreignFieldName = "knownWifi")
 	@JsonIgnore
 	protected ForeignCollection<DetectedWifi> detectedWifis;
+
+	@DatabaseField
+	protected int client_id;
 
 	// Start of user code KnownWifi additional user properties
 	// End of user code
@@ -90,14 +93,11 @@ so we need to check how this data is managed and have a better model */
 		this.ssid = ssid;
 		this.location = location;
 		this.userId = userId;
-	}
+	} 
 
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	@DatabaseField
-	protected int client_id;
-
 	public int get_id() {
 		return client_id;
 	}
@@ -150,7 +150,7 @@ so we need to check how this data is managed and have a better model */
 	}
 	
 
-
+			
 
 
 

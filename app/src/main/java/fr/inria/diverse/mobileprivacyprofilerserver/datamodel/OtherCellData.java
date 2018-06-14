@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collection;
 
-import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.MobilePrivacyProfilerDBHelper;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = OtherCellData.class)
-public class OtherCellData implements DbClass{
+public class OtherCellData implements DbClass {
 
 	public static Log log = LogFactory.getLog(OtherCellData.class);
 
@@ -73,11 +72,14 @@ public class OtherCellData implements DbClass{
 
 	@DatabaseField
 	protected java.lang.String userId;
-
+	
 
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	// @JsonManagedReference(value="cell_othercelldata")
 	protected Cell identity;
+
+	@DatabaseField
+	protected int client_id;
 
 	// Start of user code OtherCellData additional user properties
 	// End of user code
@@ -88,14 +90,11 @@ public class OtherCellData implements DbClass{
 		this.lacTac = lacTac;
 		this.type = type;
 		this.userId = userId;
-	}
+	} 
 
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	@DatabaseField
-	protected int client_id;
-
 	public int get_id() {
 		return client_id;
 	}

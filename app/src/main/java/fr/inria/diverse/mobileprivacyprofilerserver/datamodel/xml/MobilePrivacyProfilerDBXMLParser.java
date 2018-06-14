@@ -13,13 +13,13 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-//import fr.inria.diverse.mobileprivacyprofiler.fr.inria.diverse.mobileprivacyprofilerserver.datamodel.associations.*;
+//import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.associations.*;
 import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.*;
 // Start of user code additional import for MobilePrivacyProfilerDBXMLParser
 // End of user code
 
 /**
- * Root XmlPullParser for parsing the fr.inria.diverse.mobileprivacyprofilerserver.datamodel MobilePrivacyProfilerDB
+ * Root XmlPullParser for parsing the datamodel MobilePrivacyProfilerDB
  */
 public class MobilePrivacyProfilerDBXMLParser {
 	// Start of user code additional handler code 1
@@ -445,15 +445,15 @@ public class MobilePrivacyProfilerDBXMLParser {
 		 	if (name.equals(DATACLASSIFIER_CONTACTORGANISATIONS)) {
 				contactOrganisations = readContactOrganisations(parser,DATACLASSIFIER_CONTACTORGANISATIONS);
 	            // contactOrganisations.addAll(readContactOrganisations(parser,DATACLASSIFIER_CONTACTORGANISATIONS));
-	        } else
+	        } else 
 		 	if (name.equals(DATACLASSIFIER_CONTACTIMS)) {
 				contactIMs = readContactIMs(parser,DATACLASSIFIER_CONTACTIMS);
 	            // contactIMs.addAll(readContactIMs(parser,DATACLASSIFIER_CONTACTIMS));
-	        } else
+	        } else 
 		 	if (name.equals(DATACLASSIFIER_CONTACTEVENTS)) {
 				contactEvents = readContactEvents(parser,DATACLASSIFIER_CONTACTEVENTS);
 	            // contactEvents.addAll(readContactEvents(parser,DATACLASSIFIER_CONTACTEVENTS));
-	        } else
+	        } else 
 		 	if (name.equals(DATACLASSIFIER_CONTACTPHONENUMBERS)) {
 				contactPhoneNumbers = readContactPhoneNumbers(parser,DATACLASSIFIER_CONTACTPHONENUMBERS);
 	            // contactPhoneNumbers.addAll(readContactPhoneNumbers(parser,DATACLASSIFIER_CONTACTPHONENUMBERS));
@@ -1178,20 +1178,20 @@ public class MobilePrivacyProfilerDBXMLParser {
 				List<ContactEmail> entries = readContactEmails(parser,DATAREF_CONTACT_emails);	
 				contactEmails.addAll(entries); // add for inclusion in the DB
 				//result.getEmails().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
-				refCommands.add(new Contact_addContainedEmails_RefCommand(result,entries));
+				refCommands.add(new Contact_addContainedEmails_RefCommand(result,entries));	    
 	        } else
 					// TODO deal with owned ref contactOrganisation
 			if (currentTagName.equals(DATAREF_CONTACT_contactIM)) {
-				List<ContactIM> entries = readContactIMs(parser,DATAREF_CONTACT_contactIM);
+				List<ContactIM> entries = readContactIMs(parser,DATAREF_CONTACT_contactIM);	
 				contactIMs.addAll(entries); // add for inclusion in the DB
 				//result.getContactIM().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
-				refCommands.add(new Contact_addContainedContactIM_RefCommand(result,entries));
+				refCommands.add(new Contact_addContainedContactIM_RefCommand(result,entries));	    
 	        } else
 			if (currentTagName.equals(DATAREF_CONTACT_contactEvent)) {
-				List<ContactEvent> entries = readContactEvents(parser,DATAREF_CONTACT_contactEvent);
+				List<ContactEvent> entries = readContactEvents(parser,DATAREF_CONTACT_contactEvent);	
 				contactEvents.addAll(entries); // add for inclusion in the DB
 				//result.getContactEvent().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
-				refCommands.add(new Contact_addContainedContactEvent_RefCommand(result,entries));
+				refCommands.add(new Contact_addContainedContactEvent_RefCommand(result,entries));	    
 	        } else
 	        {
 	            skip(parser);
@@ -1205,8 +1205,8 @@ public class MobilePrivacyProfilerDBXMLParser {
 
 		parser.require(XmlPullParser.START_TAG, ns, DATACLASSIFIER_CONTACTORGANISATION);
     	String currentTagName = parser.getName();
-
-    	xmlId2ContactOrganisation.put(parser.getAttributeValue(null, ID_STRING),result);
+    			
+    	xmlId2ContactOrganisation.put(parser.getAttributeValue(null, ID_STRING),result);		
 		result.setCompany(parser.getAttributeValue(null, DATAATT_CONTACTORGANISATION_company));
 		result.setTitle(parser.getAttributeValue(null, DATAATT_CONTACTORGANISATION_title));
 		result.setUserId(parser.getAttributeValue(null, DATAATT_CONTACTORGANISATION_userId));
@@ -1215,11 +1215,11 @@ public class MobilePrivacyProfilerDBXMLParser {
 	            continue;
 	        }
 	        currentTagName = parser.getName();
-			if (currentTagName.equals(DATAREF_CONTACTORGANISATION_referencedContact)) {
+			if (currentTagName.equals(DATAREF_CONTACTORGANISATION_referencedContact)) {	
 				parser.require(XmlPullParser.START_TAG, ns, DATAREF_CONTACTORGANISATION_referencedContact);
 	            String id = readText(parser);
 				refCommands.add(new ContactOrganisation_setReferencedContact_RefCommand(result,id, this));
-				parser.require(XmlPullParser.END_TAG, ns, DATAREF_CONTACTORGANISATION_referencedContact);
+				parser.require(XmlPullParser.END_TAG, ns, DATAREF_CONTACTORGANISATION_referencedContact);	    
 	        } else
 	        {
 	            skip(parser);
@@ -1233,8 +1233,8 @@ public class MobilePrivacyProfilerDBXMLParser {
 
 		parser.require(XmlPullParser.START_TAG, ns, DATACLASSIFIER_CONTACTIM);
     	String currentTagName = parser.getName();
-
-    	xmlId2ContactIM.put(parser.getAttributeValue(null, ID_STRING),result);
+    			
+    	xmlId2ContactIM.put(parser.getAttributeValue(null, ID_STRING),result);		
 		result.setProtocole(parser.getAttributeValue(null, DATAATT_CONTACTIM_protocole));
 		result.setImId(parser.getAttributeValue(null, DATAATT_CONTACTIM_imId));
 		result.setUserId(parser.getAttributeValue(null, DATAATT_CONTACTIM_userId));
@@ -1243,11 +1243,11 @@ public class MobilePrivacyProfilerDBXMLParser {
 	            continue;
 	        }
 	        currentTagName = parser.getName();
-			if (currentTagName.equals(DATAREF_CONTACTIM_contact)) {
+			if (currentTagName.equals(DATAREF_CONTACTIM_contact)) {	
 				parser.require(XmlPullParser.START_TAG, ns, DATAREF_CONTACTIM_contact);
 	            String id = readText(parser);
 				refCommands.add(new ContactIM_setContact_RefCommand(result,id, this));
-				parser.require(XmlPullParser.END_TAG, ns, DATAREF_CONTACTIM_contact);
+				parser.require(XmlPullParser.END_TAG, ns, DATAREF_CONTACTIM_contact);	    
 	        } else
 	        {
 	            skip(parser);
@@ -1261,8 +1261,8 @@ public class MobilePrivacyProfilerDBXMLParser {
 
 		parser.require(XmlPullParser.START_TAG, ns, DATACLASSIFIER_CONTACTEVENT);
     	String currentTagName = parser.getName();
-
-    	xmlId2ContactEvent.put(parser.getAttributeValue(null, ID_STRING),result);
+    			
+    	xmlId2ContactEvent.put(parser.getAttributeValue(null, ID_STRING),result);		
 		result.setStartDate(parser.getAttributeValue(null, DATAATT_CONTACTEVENT_startDate));
 		result.setType(parser.getAttributeValue(null, DATAATT_CONTACTEVENT_type));
 		result.setUserId(parser.getAttributeValue(null, DATAATT_CONTACTEVENT_userId));
@@ -1271,11 +1271,11 @@ public class MobilePrivacyProfilerDBXMLParser {
 	            continue;
 	        }
 	        currentTagName = parser.getName();
-			if (currentTagName.equals(DATAREF_CONTACTEVENT_contact)) {
+			if (currentTagName.equals(DATAREF_CONTACTEVENT_contact)) {	
 				parser.require(XmlPullParser.START_TAG, ns, DATAREF_CONTACTEVENT_contact);
 	            String id = readText(parser);
 				refCommands.add(new ContactEvent_setContact_RefCommand(result,id, this));
-				parser.require(XmlPullParser.END_TAG, ns, DATAREF_CONTACTEVENT_contact);
+				parser.require(XmlPullParser.END_TAG, ns, DATAREF_CONTACTEVENT_contact);	    
 	        } else
 	        {
 	            skip(parser);
@@ -1510,10 +1510,10 @@ public class MobilePrivacyProfilerDBXMLParser {
 	        }
 	        currentTagName = parser.getName();
 			if (currentTagName.equals(DATAREF_CELL_history)) {
-				List<NeighboringCellHistory> entries = readNeighboringCellHistorys(parser,DATAREF_CELL_history);
+				List<NeighboringCellHistory> entries = readNeighboringCellHistorys(parser,DATAREF_CELL_history);	
 				neighboringCellHistorys.addAll(entries); // add for inclusion in the DB
 				//result.getHistory().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
-				refCommands.add(new Cell_addContainedHistory_RefCommand(result,entries));
+				refCommands.add(new Cell_addContainedHistory_RefCommand(result,entries));	    
 	        } else
 					// TODO deal with owned ref cdmaposition
 					// TODO deal with owned ref otherPosition
@@ -1625,10 +1625,10 @@ public class MobilePrivacyProfilerDBXMLParser {
 	        }
 	        currentTagName = parser.getName();
 			if (currentTagName.equals(DATAREF_BLUETOOTHDEVICE_bluetoothLog)) {
-				List<BluetoothLog> entries = readBluetoothLogs(parser,DATAREF_BLUETOOTHDEVICE_bluetoothLog);
+				List<BluetoothLog> entries = readBluetoothLogs(parser,DATAREF_BLUETOOTHDEVICE_bluetoothLog);	
 				bluetoothLogs.addAll(entries); // add for inclusion in the DB
 				//result.getBluetoothLog().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
-				refCommands.add(new BluetoothDevice_addContainedBluetoothLog_RefCommand(result,entries));
+				refCommands.add(new BluetoothDevice_addContainedBluetoothLog_RefCommand(result,entries));	    
 	        } else
 	        {
 	            skip(parser);
@@ -1760,7 +1760,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 				applicationUsageStatssToUpdate.add(element);
 			}
 		}
-
+		
 	}
 	class ApplicationUsageStats_setApplication_RefCommand extends RefCommand{
 		ApplicationUsageStats self;
@@ -1839,12 +1839,12 @@ public class MobilePrivacyProfilerDBXMLParser {
 				contactEmailsToUpdate.add(element);
 			}
 		}
-
+		
 	}
 	class Contact_setContainedContactOrganisation_RefCommand extends RefCommand{
 	Contact container;
 		ContactOrganisation containedElement;
-
+		
 		public Contact_setContainedContactOrganisation_RefCommand(Contact container,
 				ContactOrganisation containedElement) {
 			super();
@@ -1855,14 +1855,14 @@ public class MobilePrivacyProfilerDBXMLParser {
 		@Override
 		public void run() {
 			containedElement.setReferencedContact(container);
-			contactOrganisationsToUpdate.add(containedElement);
+			contactOrganisationsToUpdate.add(containedElement);			
 		}
-
+		
 	}
 	class Contact_addContainedContactIM_RefCommand extends RefCommand{
 		Contact container;
 		List<ContactIM> containedElements;
-
+		
 		public Contact_addContainedContactIM_RefCommand(Contact container,
 				List<ContactIM> containedElements) {
 			super();
@@ -1872,17 +1872,17 @@ public class MobilePrivacyProfilerDBXMLParser {
 
 		@Override
 		public void run() {
-			for (ContactIM element : containedElements) {
+			for (ContactIM element : containedElements) {				
 				element.setContact(container);
 				contactIMsToUpdate.add(element);
 			}
 		}
-
+		
 	}
 	class Contact_addContainedContactEvent_RefCommand extends RefCommand{
 		Contact container;
 		List<ContactEvent> containedElements;
-
+		
 		public Contact_addContainedContactEvent_RefCommand(Contact container,
 				List<ContactEvent> containedElements) {
 			super();
@@ -1892,18 +1892,18 @@ public class MobilePrivacyProfilerDBXMLParser {
 
 		@Override
 		public void run() {
-			for (ContactEvent element : containedElements) {
+			for (ContactEvent element : containedElements) {				
 				element.setContact(container);
 				contactEventsToUpdate.add(element);
 			}
 		}
-
+		
 	}
 	class ContactOrganisation_setReferencedContact_RefCommand extends RefCommand{
 		ContactOrganisation self;
 		String referencedElementID;
 		MobilePrivacyProfilerDBXMLParser parser;
-
+		
 		public ContactOrganisation_setReferencedContact_RefCommand(ContactOrganisation self,
 				String referencedElementID, MobilePrivacyProfilerDBXMLParser parser) {
 			super();
@@ -1922,7 +1922,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 		ContactIM self;
 		String referencedElementID;
 		MobilePrivacyProfilerDBXMLParser parser;
-
+		
 		public ContactIM_setContact_RefCommand(ContactIM self,
 				String referencedElementID, MobilePrivacyProfilerDBXMLParser parser) {
 			super();
@@ -1941,7 +1941,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 		ContactEvent self;
 		String referencedElementID;
 		MobilePrivacyProfilerDBXMLParser parser;
-
+		
 		public ContactEvent_setContact_RefCommand(ContactEvent self,
 				String referencedElementID, MobilePrivacyProfilerDBXMLParser parser) {
 			super();
@@ -2036,7 +2036,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 	class Cell_addContainedHistory_RefCommand extends RefCommand{
 		Cell container;
 		List<NeighboringCellHistory> containedElements;
-
+		
 		public Cell_addContainedHistory_RefCommand(Cell container,
 				List<NeighboringCellHistory> containedElements) {
 			super();
@@ -2046,17 +2046,17 @@ public class MobilePrivacyProfilerDBXMLParser {
 
 		@Override
 		public void run() {
-			for (NeighboringCellHistory element : containedElements) {
+			for (NeighboringCellHistory element : containedElements) {				
 				element.setCells(container);
 				neighboringCellHistorysToUpdate.add(element);
 			}
 		}
-
+		
 	}
 	class Cell_setContainedCdmaposition_RefCommand extends RefCommand{
 	Cell container;
 		CdmaCellData containedElement;
-
+		
 		public Cell_setContainedCdmaposition_RefCommand(Cell container,
 				CdmaCellData containedElement) {
 			super();
@@ -2067,14 +2067,14 @@ public class MobilePrivacyProfilerDBXMLParser {
 		@Override
 		public void run() {
 			containedElement.setIdentity(container);
-			cdmaCellDatasToUpdate.add(containedElement);
+			cdmaCellDatasToUpdate.add(containedElement);			
 		}
-
+		
 	}
 	class Cell_setContainedOtherPosition_RefCommand extends RefCommand{
 	Cell container;
 		OtherCellData containedElement;
-
+		
 		public Cell_setContainedOtherPosition_RefCommand(Cell container,
 				OtherCellData containedElement) {
 			super();
@@ -2085,9 +2085,9 @@ public class MobilePrivacyProfilerDBXMLParser {
 		@Override
 		public void run() {
 			containedElement.setIdentity(container);
-			otherCellDatasToUpdate.add(containedElement);
+			otherCellDatasToUpdate.add(containedElement);			
 		}
-
+		
 	}
 	class OtherCellData_setIdentity_RefCommand extends RefCommand{
 		OtherCellData self;
@@ -2149,7 +2149,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 	class BluetoothDevice_addContainedBluetoothLog_RefCommand extends RefCommand{
 		BluetoothDevice container;
 		List<BluetoothLog> containedElements;
-
+		
 		public BluetoothDevice_addContainedBluetoothLog_RefCommand(BluetoothDevice container,
 				List<BluetoothLog> containedElements) {
 			super();
@@ -2159,12 +2159,12 @@ public class MobilePrivacyProfilerDBXMLParser {
 
 		@Override
 		public void run() {
-			for (BluetoothLog element : containedElements) {
+			for (BluetoothLog element : containedElements) {				
 				element.setDevice(container);
 				bluetoothLogsToUpdate.add(element);
 			}
 		}
-
+		
 	}
 	class BluetoothLog_setDevice_RefCommand extends RefCommand{
 		BluetoothLog self;

@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = Cell.class)
-public class Cell implements DbClass{
+public class Cell implements DbClass {
 
 	public static Log log = LogFactory.getLog(Cell.class);
 
@@ -72,7 +72,7 @@ public class Cell implements DbClass{
 
 	@DatabaseField
 	protected java.lang.String userId;
-
+	
 
 	@ForeignCollectionField(eager = false, foreignFieldName = "cells")
 	@JsonIgnore
@@ -86,6 +86,9 @@ public class Cell implements DbClass{
 	// @JsonManagedReference(value="cell_othercelldata")
 	protected OtherCellData otherPosition;
 
+	@DatabaseField
+	protected int client_id;
+
 	// Start of user code Cell additional user properties
 	// End of user code
 	
@@ -94,14 +97,11 @@ public class Cell implements DbClass{
 		super();
 		this.cellId = cellId;
 		this.userId = userId;
-	}
+	} 
 
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	@DatabaseField
-	protected int client_id;
-
 	public int get_id() {
 		return client_id;
 	}
@@ -183,7 +183,7 @@ public class Cell implements DbClass{
 	@JsonProperty
 	public void setOtherPosition(OtherCellData otherPosition) {
 		this.otherPosition = otherPosition;
-	}
+	}			
 
 
 

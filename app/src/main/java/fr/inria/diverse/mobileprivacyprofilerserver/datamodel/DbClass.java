@@ -1,3 +1,4 @@
+/*  */
 package fr.inria.diverse.mobileprivacyprofilerserver.datamodel;
 
 public interface DbClass {
@@ -12,3 +13,4 @@ public interface DbClass {
     public void setUserId(String userId);
 
 }
+

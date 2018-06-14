@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
                   property  = "_id",
 				  scope = PhoneCallLog.class)
-public class PhoneCallLog implements DbClass{
+public class PhoneCallLog implements DbClass {
 
 	public static Log log = LogFactory.getLog(PhoneCallLog.class);
 
@@ -81,7 +81,10 @@ public class PhoneCallLog implements DbClass{
 
 	@DatabaseField
 	protected java.lang.String userId;
+	
 
+	@DatabaseField
+	protected int client_id;
 
 	// Start of user code PhoneCallLog additional user properties
 	// End of user code
@@ -94,14 +97,11 @@ public class PhoneCallLog implements DbClass{
 		this.duration = duration;
 		this.callType = callType;
 		this.userId = userId;
-	}
+	} 
 
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	@DatabaseField
-	protected int client_id;
-
 	public int get_id() {
 		return client_id;
 	}

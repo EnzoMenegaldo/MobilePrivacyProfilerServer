@@ -1,5 +1,4 @@
 /*  */
-
 package fr.inria.diverse.mobileprivacyprofilerserver.datamodel;
 
 import java.sql.Connection;
@@ -54,31 +53,32 @@ public class DBTools {
 		MobilePrivacyProfilerDBHelper dbContext = null;
 		
 		dbContext = new MobilePrivacyProfilerDBHelper();
+		
+		dbContext.mobilePrivacyProfilerDB_metadataDao = DaoManager.createDao(connectionSource, MobilePrivacyProfilerDB_metadata.class);
 		dbContext.applicationHistoryDao = DaoManager.createDao(connectionSource, ApplicationHistory.class);
 		dbContext.applicationUsageStatsDao = DaoManager.createDao(connectionSource, ApplicationUsageStats.class);
 		dbContext.authentificationDao = DaoManager.createDao(connectionSource, Authentification.class);
-		dbContext.batteryUsageDao = DaoManager.createDao(connectionSource, BatteryUsage.class);
-		dbContext.bluetoothDeviceDao = DaoManager.createDao(connectionSource, BluetoothDevice.class);
-		dbContext.bluetoothLogDao = DaoManager.createDao(connectionSource, BluetoothLog.class);
-		dbContext.calendarEventDao = DaoManager.createDao(connectionSource, CalendarEvent.class);
-		dbContext.cdmaCellDataDao = DaoManager.createDao(connectionSource, CdmaCellData.class);
-		dbContext.cellDao = DaoManager.createDao(connectionSource, Cell.class);
 		dbContext.contactDao = DaoManager.createDao(connectionSource, Contact.class);
-		dbContext.contactEmailDao = DaoManager.createDao(connectionSource, ContactEmail.class);
+		dbContext.contactOrganisationDao = DaoManager.createDao(connectionSource, ContactOrganisation.class);
+		dbContext.contactIMDao = DaoManager.createDao(connectionSource, ContactIM.class);
+		dbContext.contactEventDao = DaoManager.createDao(connectionSource, ContactEvent.class);
 		dbContext.contactPhoneNumberDao = DaoManager.createDao(connectionSource, ContactPhoneNumber.class);
 		dbContext.contactPhysicalAddressDao = DaoManager.createDao(connectionSource, ContactPhysicalAddress.class);
-		dbContext.detectedWifiDao= DaoManager.createDao(connectionSource, DetectedWifi.class);
-		dbContext.geolocationDao= DaoManager.createDao(connectionSource, Geolocation.class);
-		dbContext.knownWifiDao= DaoManager.createDao(connectionSource, KnownWifi.class);
-		dbContext.mobilePrivacyProfilerDB_metadataDao= DaoManager.createDao(connectionSource, MobilePrivacyProfilerDB_metadata.class);
-		dbContext.neighboringCellHistoryDao= DaoManager.createDao(connectionSource, NeighboringCellHistory.class);
-		dbContext.otherCellDataDao= DaoManager.createDao(connectionSource, OtherCellData.class);
-		dbContext.phoneCallLogDao= DaoManager.createDao(connectionSource, PhoneCallLog.class);
-		dbContext.sMSDao= DaoManager.createDao(connectionSource, SMS.class);
-		dbContext.webHistoryDao= DaoManager.createDao(connectionSource, WebHistory.class);
-		dbContext.contactEventDao= DaoManager.createDao(connectionSource, ContactEvent.class);
-		dbContext.contactIMDao= DaoManager.createDao(connectionSource, ContactIM.class);
-		dbContext.contactOrganisationDao= DaoManager.createDao(connectionSource, ContactOrganisation.class);
+		dbContext.contactEmailDao = DaoManager.createDao(connectionSource, ContactEmail.class);
+		dbContext.knownWifiDao = DaoManager.createDao(connectionSource, KnownWifi.class);
+		dbContext.detectedWifiDao = DaoManager.createDao(connectionSource, DetectedWifi.class);
+		dbContext.geolocationDao = DaoManager.createDao(connectionSource, Geolocation.class);
+		dbContext.calendarEventDao = DaoManager.createDao(connectionSource, CalendarEvent.class);
+		dbContext.phoneCallLogDao = DaoManager.createDao(connectionSource, PhoneCallLog.class);
+		dbContext.cellDao = DaoManager.createDao(connectionSource, Cell.class);
+		dbContext.otherCellDataDao = DaoManager.createDao(connectionSource, OtherCellData.class);
+		dbContext.cdmaCellDataDao = DaoManager.createDao(connectionSource, CdmaCellData.class);
+		dbContext.neighboringCellHistoryDao = DaoManager.createDao(connectionSource, NeighboringCellHistory.class);
+		dbContext.bluetoothDeviceDao = DaoManager.createDao(connectionSource, BluetoothDevice.class);
+		dbContext.bluetoothLogDao = DaoManager.createDao(connectionSource, BluetoothLog.class);
+		dbContext.sMSDao = DaoManager.createDao(connectionSource, SMS.class);
+		dbContext.batteryUsageDao = DaoManager.createDao(connectionSource, BatteryUsage.class);
+		dbContext.webHistoryDao = DaoManager.createDao(connectionSource, WebHistory.class);
 
 		return dbContext;
 	}
@@ -92,33 +92,35 @@ public class DBTools {
 		
 		// if you need to create the table
 		TableUtils.createTable(connectionSource, ApplicationHistory.class);
+		TableUtils.createTable(connectionSource, MobilePrivacyProfilerDB_metadata.class);
+		TableUtils.createTable(connectionSource, ApplicationHistory.class);
 		TableUtils.createTable(connectionSource, ApplicationUsageStats.class);
 		TableUtils.createTable(connectionSource, Authentification.class);
-		TableUtils.createTable(connectionSource, BatteryUsage.class);
-		TableUtils.createTable(connectionSource, BluetoothDevice.class);
-		TableUtils.createTable(connectionSource, BluetoothLog.class);
-		TableUtils.createTable(connectionSource, CalendarEvent.class);
-		TableUtils.createTable(connectionSource, CdmaCellData.class);
-		TableUtils.createTable(connectionSource, Cell.class);
 		TableUtils.createTable(connectionSource, Contact.class);
-		TableUtils.createTable(connectionSource, ContactEmail.class);
+		TableUtils.createTable(connectionSource, ContactOrganisation.class);
+		TableUtils.createTable(connectionSource, ContactIM.class);
+		TableUtils.createTable(connectionSource, ContactEvent.class);
 		TableUtils.createTable(connectionSource, ContactPhoneNumber.class);
 		TableUtils.createTable(connectionSource, ContactPhysicalAddress.class);
+		TableUtils.createTable(connectionSource, ContactEmail.class);
+		TableUtils.createTable(connectionSource, KnownWifi.class);
 		TableUtils.createTable(connectionSource, DetectedWifi.class);
 		TableUtils.createTable(connectionSource, Geolocation.class);
-		TableUtils.createTable(connectionSource, KnownWifi.class);
-		TableUtils.createTable(connectionSource, MobilePrivacyProfilerDB_metadata.class);
-		TableUtils.createTable(connectionSource, NeighboringCellHistory.class);
-		TableUtils.createTable(connectionSource, OtherCellData.class);
+		TableUtils.createTable(connectionSource, CalendarEvent.class);
 		TableUtils.createTable(connectionSource, PhoneCallLog.class);
+		TableUtils.createTable(connectionSource, Cell.class);
+		TableUtils.createTable(connectionSource, OtherCellData.class);
+		TableUtils.createTable(connectionSource, CdmaCellData.class);
+		TableUtils.createTable(connectionSource, NeighboringCellHistory.class);
+		TableUtils.createTable(connectionSource, BluetoothDevice.class);
+		TableUtils.createTable(connectionSource, BluetoothLog.class);
 		TableUtils.createTable(connectionSource, SMS.class);
+		TableUtils.createTable(connectionSource, BatteryUsage.class);
 		TableUtils.createTable(connectionSource, WebHistory.class);
-		TableUtils.createTable(connectionSource, ContactEvent.class);
-		TableUtils.createTable(connectionSource, ContactIM.class);
-		TableUtils.createTable(connectionSource, ContactOrganisation.class);
 
 		
 		log.debug("databaseInitialisation() - End");
 	}
 	
 }
+
