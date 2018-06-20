@@ -159,13 +159,13 @@ private static MobilePrivacyProfilerDBHelper  dbHelper;
         return stringResponse;
     });
 
-	post("/DetectedWifi",(request, response)->{
-        Class type = DetectedWifi.class;
+	post("/LogsWifi",(request, response)->{
+        Class type = LogsWifi.class;
         //convert the request.body() into a List of the received object
-        List<DetectedWifi> list = deserializeList(request.body(),type,response);
+        List<LogsWifi> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().detectedWifiDao,response);
+        String stringResponse = storeData(list,type,getDBHelper().logsWifiDao,response);
         return stringResponse;
     });
 
