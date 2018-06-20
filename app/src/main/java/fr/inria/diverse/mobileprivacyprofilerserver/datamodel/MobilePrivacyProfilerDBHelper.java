@@ -50,8 +50,8 @@ public class MobilePrivacyProfilerDBHelper {
 	//public RuntimeExceptionDao<ContactEmail, Integer> contactEmailDao;
 	public Dao<KnownWifi, Integer> knownWifiDao;
 	//public RuntimeExceptionDao<KnownWifi, Integer> knownWifiDao;
-	public Dao<DetectedWifi, Integer> detectedWifiDao;
-	//public RuntimeExceptionDao<DetectedWifi, Integer> detectedWifiDao;
+	public Dao<LogsWifi, Integer> logsWifiDao;
+	//public RuntimeExceptionDao<LogsWifi, Integer> logsWifiDao;
 	public Dao<Geolocation, Integer> geolocationDao;
 	//public RuntimeExceptionDao<Geolocation, Integer> geolocationDao;
 	public Dao<CalendarEvent, Integer> calendarEventDao;
@@ -94,7 +94,7 @@ public class MobilePrivacyProfilerDBHelper {
 		Dao<ContactPhysicalAddress, Integer> contactPhysicalAddressDao,
 		Dao<ContactEmail, Integer> contactEmailDao,
 		Dao<KnownWifi, Integer> knownWifiDao,
-		Dao<DetectedWifi, Integer> detectedWifiDao,
+		Dao<LogsWifi, Integer> logsWifiDao,
 		Dao<Geolocation, Integer> geolocationDao,
 		Dao<CalendarEvent, Integer> calendarEventDao,
 		Dao<PhoneCallLog, Integer> phoneCallLogDao,
@@ -120,7 +120,7 @@ public class MobilePrivacyProfilerDBHelper {
 		this.contactPhysicalAddressDao = contactPhysicalAddressDao;
 		this.contactEmailDao = contactEmailDao;
 		this.knownWifiDao = knownWifiDao;
-		this.detectedWifiDao = detectedWifiDao;
+		this.logsWifiDao = logsWifiDao;
 		this.geolocationDao = geolocationDao;
 		this.calendarEventDao = calendarEventDao;
 		this.phoneCallLogDao = phoneCallLogDao;

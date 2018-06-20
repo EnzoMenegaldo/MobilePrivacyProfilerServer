@@ -66,7 +66,7 @@ public class DBTools {
 		dbContext.contactPhysicalAddressDao = DaoManager.createDao(connectionSource, ContactPhysicalAddress.class);
 		dbContext.contactEmailDao = DaoManager.createDao(connectionSource, ContactEmail.class);
 		dbContext.knownWifiDao = DaoManager.createDao(connectionSource, KnownWifi.class);
-		dbContext.detectedWifiDao = DaoManager.createDao(connectionSource, DetectedWifi.class);
+		dbContext.logsWifiDao = DaoManager.createDao(connectionSource, LogsWifi.class);
 		dbContext.geolocationDao = DaoManager.createDao(connectionSource, Geolocation.class);
 		dbContext.calendarEventDao = DaoManager.createDao(connectionSource, CalendarEvent.class);
 		dbContext.phoneCallLogDao = DaoManager.createDao(connectionSource, PhoneCallLog.class);
@@ -103,7 +103,7 @@ public class DBTools {
 		TableUtils.createTable(connectionSource, ContactPhysicalAddress.class);
 		TableUtils.createTable(connectionSource, ContactEmail.class);
 		TableUtils.createTable(connectionSource, KnownWifi.class);
-		TableUtils.createTable(connectionSource, DetectedWifi.class);
+		TableUtils.createTable(connectionSource, LogsWifi.class);
 		TableUtils.createTable(connectionSource, Geolocation.class);
 		TableUtils.createTable(connectionSource, CalendarEvent.class);
 		TableUtils.createTable(connectionSource, PhoneCallLog.class);
