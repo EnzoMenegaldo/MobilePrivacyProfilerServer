@@ -1,14 +1,13 @@
 /*  */
 package fr.inria.diverse.mobileprivacyprofilerserver;
 
-import com.fasterxml.jackson.core.ObjectCodec;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import spark.Response;
 
 import java.io.File;
@@ -20,6 +19,7 @@ import java.util.List;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
+
 
 // Start of user code additional import for APIserver :
 // End of user code

@@ -29,15 +29,15 @@ public class Test {
         ApplicationHistory a = new ApplicationHistory();
         a.setAppName("appName : a");
         a.setPackageName("packageName : a");
-        a.setId(1);
+        a.set_id(1);
         ApplicationHistory b = new ApplicationHistory();
         b.setAppName("appName : b");
         b.setPackageName("packageName : b");
-        b.setId(2);
+        b.set_id(2);
         ApplicationHistory c = new ApplicationHistory();
         c.setAppName("appName : c");
         c.setPackageName("packageName : c");
-        c.setId(3);
+        c.set_id(3);
 
         List<ApplicationHistory> appHistToExport = new ArrayList<ApplicationHistory>();
         appHistToExport.add(a);

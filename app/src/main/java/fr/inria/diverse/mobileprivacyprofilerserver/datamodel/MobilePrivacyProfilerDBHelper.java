@@ -302,7 +302,7 @@ public class MobilePrivacyProfilerDBHelper {
 	public boolean isRegisteredDbClassObject(DbClass object, Class type, Dao dao) throws IllegalAccessException, InstantiationException {
 
 		DbClass query = (DbClass) type.newInstance();
-		query.set_id(object.get_id());
+		query.setAndroid_id(object.getAndroid_id());
 		query.setUserId(object.getUserId());
 		List queryOutput = null;
 		try {
@@ -324,7 +324,7 @@ public class MobilePrivacyProfilerDBHelper {
 
 	public void updateObjectFromDB(DbClass object, Class type, Dao dao) throws IllegalAccessException, InstantiationException {
 		DbClass query = (DbClass) type.newInstance();
-		query.set_id(object.get_id());
+		query.setAndroid_id(object.getAndroid_id());
 		query.setUserId(object.getUserId());
 		List queryOutput = null;
 		try {
@@ -332,8 +332,8 @@ public class MobilePrivacyProfilerDBHelper {
 		} catch (SQLException e) { e.printStackTrace(); }
 
 		if (queryOutput.size()==1) {
-			int id =((DbClass) queryOutput.get(0)).getId();
-			object.setId(id);
+			int id =((DbClass) queryOutput.get(0)).get_id();
+			object.set_id(id);
 			try {dao.createOrUpdate(type.cast(object));
 				/*dao.delete(queryOutput);
 				dao.create(type.cast(object));*/

@@ -104,7 +104,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 	Hashtable<String, WebHistory> xmlId2WebHistory = new Hashtable<String, WebHistory>();
 
 	// minimize memory footprint by using static Strings
-    public static final String ID_STRING = "id";
+    public static final String ID_STRING = "android_id";
 
 	public static final String DATACLASSIFIER_MOBILEPRIVACYPROFILERDB_METADATAS = "MOBILEPRIVACYPROFILERDB_METADATAS";
 	public static final String DATACLASSIFIER_MOBILEPRIVACYPROFILERDB_METADATA  = "MOBILEPRIVACYPROFILERDB_METADATA";
@@ -1553,7 +1553,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 			if (currentTagName.equals(DATAREF_OTHERCELLDATA_identity)) {	
 				parser.require(XmlPullParser.START_TAG, ns, DATAREF_OTHERCELLDATA_identity);
 	            String id = readText(parser);
-				refCommands.add(new OtherCellData_setIdentity_RefCommand(result,id, this));
+				refCommands.add(new OtherCellData_set_identity_RefCommand(result,id, this));
 				parser.require(XmlPullParser.END_TAG, ns, DATAREF_OTHERCELLDATA_identity);	    
 	        } else
 	        {
@@ -1581,7 +1581,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 			if (currentTagName.equals(DATAREF_CDMACELLDATA_identity)) {	
 				parser.require(XmlPullParser.START_TAG, ns, DATAREF_CDMACELLDATA_identity);
 	            String id = readText(parser);
-				refCommands.add(new CdmaCellData_setIdentity_RefCommand(result,id, this));
+				refCommands.add(new CdmaCellData_set_identity_RefCommand(result,id, this));
 				parser.require(XmlPullParser.END_TAG, ns, DATAREF_CDMACELLDATA_identity);	    
 	        } else
 	        {
@@ -2096,7 +2096,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 
 		@Override
 		public void run() {
-			containedElement.setIdentity(container);
+			containedElement.set_identity(container);
 			cdmaCellDatasToUpdate.add(containedElement);			
 		}
 		
@@ -2114,17 +2114,17 @@ public class MobilePrivacyProfilerDBXMLParser {
 
 		@Override
 		public void run() {
-			containedElement.setIdentity(container);
+			containedElement.set_identity(container);
 			otherCellDatasToUpdate.add(containedElement);			
 		}
 		
 	}
-	class OtherCellData_setIdentity_RefCommand extends RefCommand{
+	class OtherCellData_set_identity_RefCommand extends RefCommand{
 		OtherCellData self;
 		String referencedElementID;
 		MobilePrivacyProfilerDBXMLParser parser;
 		
-		public OtherCellData_setIdentity_RefCommand(OtherCellData self,
+		public OtherCellData_set_identity_RefCommand(OtherCellData self,
 				String referencedElementID, MobilePrivacyProfilerDBXMLParser parser) {
 			super();
 			this.self = self;
@@ -2134,16 +2134,16 @@ public class MobilePrivacyProfilerDBXMLParser {
 
 		@Override
 		public void run() {
-			self.setIdentity(parser.xmlId2Cell.get(referencedElementID));
+			self.set_identity(parser.xmlId2Cell.get(referencedElementID));
 			otherCellDatasToUpdate.add(self);
 		}
 	}
-	class CdmaCellData_setIdentity_RefCommand extends RefCommand{
+	class CdmaCellData_set_identity_RefCommand extends RefCommand{
 		CdmaCellData self;
 		String referencedElementID;
 		MobilePrivacyProfilerDBXMLParser parser;
 		
-		public CdmaCellData_setIdentity_RefCommand(CdmaCellData self,
+		public CdmaCellData_set_identity_RefCommand(CdmaCellData self,
 				String referencedElementID, MobilePrivacyProfilerDBXMLParser parser) {
 			super();
 			this.self = self;
@@ -2153,7 +2153,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 
 		@Override
 		public void run() {
-			self.setIdentity(parser.xmlId2Cell.get(referencedElementID));
+			self.set_identity(parser.xmlId2Cell.get(referencedElementID));
 			cdmaCellDatasToUpdate.add(self);
 		}
 	}

@@ -40,8 +40,8 @@ public class ContactIM implements DbClass {
 	public static Log log = LogFactory.getLog(ContactIM.class);
 
 	public static final String XML_CONTACTIM = "CONTACTIM";
-	public static final String XML_ATT_ID = "id";
-	public static final String XML_ATT_CLIENT_ID = "client_id";
+	public static final String XML_ATT_ID = "_id";
+	public static final String XML_ATT_ANDROID_ID = "android_id";
 	public static final String XML_ATT_PROTOCOLE = "protocole";
 	public static final String XML_ATT_IMID = "imId";
 	public static final String XML_ATT_USERID = "userId";
@@ -79,7 +79,7 @@ public class ContactIM implements DbClass {
 	protected Contact contact;
 
 	@DatabaseField
-	protected int client_id;
+	protected int android_id;
 
 	// Start of user code ContactIM additional user properties
 	// End of user code
@@ -96,19 +96,19 @@ public class ContactIM implements DbClass {
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
 	public int get_id() {
-		return client_id;
-	}
-	@JsonProperty
-	public void set_id(int id) {
-		this.client_id = id;
-	}
-
-	public int getId() {
 		return _id;
 	}
 	@JsonProperty
-	public void setId(int id) {
+	public void set_id(int id) {
 		this._id = id;
+	}
+
+	public int getAndroid_id() {
+		return android_id;
+	}
+	@JsonProperty
+	public void setAndroid_id(int id) {
+		this.android_id = id;
 	}
 
 	public MobilePrivacyProfilerDBHelper getContextDB(){
@@ -170,9 +170,9 @@ public class ContactIM implements DbClass {
 		sb.append(this._id);
     	sb.append("\" ");
 		sb.append(" ");
-		sb.append(XML_ATT_CLIENT_ID);
+		sb.append(XML_ATT_ANDROID_ID);
 		sb.append("=\"");
-		sb.append(this.client_id);
+		sb.append(this._id);
 		sb.append("\" ");
 		sb.append(" ");
     	sb.append(XML_ATT_PROTOCOLE);

@@ -33,15 +33,15 @@ import org.apache.commons.logging.LogFactory;
   */ 
 @DatabaseTable(tableName = "contactOrganisation")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
-                  property  = "_id",
+                  property  = "android_id",
 				  scope = ContactOrganisation.class)
 public class ContactOrganisation implements DbClass {
 
 	public static Log log = LogFactory.getLog(ContactOrganisation.class);
 
 	public static final String XML_CONTACTORGANISATION = "CONTACTORGANISATION";
-	public static final String XML_ATT_ID = "id";
-	public static final String XML_ATT_CLIENT_ID = "client_id";
+	public static final String XML_ATT_ANDROID_ID = "android_id";
+	public static final String XML_ATT_ID = "_id";
 	public static final String XML_ATT_COMPANY = "company";
 	public static final String XML_ATT_TITLE = "title";
 	public static final String XML_ATT_USERID = "userId";
@@ -79,7 +79,7 @@ public class ContactOrganisation implements DbClass {
 	protected Contact referencedContact;
 
 	@DatabaseField
-	protected int client_id;
+	protected int android_id;
 
 	// Start of user code ContactOrganisation additional user properties
 	// End of user code
@@ -95,19 +95,19 @@ public class ContactOrganisation implements DbClass {
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	public int get_id() {
-		return client_id;
+	public int getAndroid_id() {
+		return android_id;
 	}
 	@JsonProperty
-	public void set_id(int id) {
-		this.client_id = id;
+	public void setAndroid_id(int id) {
+		this.android_id = id;
 	}
 
-	public int getId() {
+	public int get_id() {
 		return _id;
 	}
 	@JsonProperty
-	public void setId(int id) {
+	public void set_id(int id) {
 		this._id = id;
 	}
 
@@ -166,13 +166,13 @@ public class ContactOrganisation implements DbClass {
 		StringBuilder sb = new StringBuilder();
 		sb.append(indent+"<");
     	sb.append(XML_CONTACTORGANISATION);
-		sb.append(" "+XML_ATT_ID+"=\"");
+		sb.append(" "+XML_ATT_ANDROID_ID+"=\"");
 		sb.append(this._id);
     	sb.append("\" ");
 		sb.append(" ");
-		sb.append(XML_ATT_CLIENT_ID);
+		sb.append(XML_ATT_ANDROID_ID);
 		sb.append("=\"");
-		sb.append(this.client_id);
+		sb.append(this.android_id);
 		sb.append("\" ");
 		sb.append(" ");
     	sb.append(XML_ATT_COMPANY);

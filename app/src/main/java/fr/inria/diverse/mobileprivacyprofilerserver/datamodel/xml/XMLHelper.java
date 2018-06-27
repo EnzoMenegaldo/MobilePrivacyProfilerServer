@@ -323,7 +323,7 @@ public class XMLHelper {
 			for(OtherCellData  otherCellData : otherCellDatas){
 				// TODO find if contained by another element, if not put it there
 				boolean isContained = false;
-				if(otherCellData.getIdentity() != null){
+				if(otherCellData.get_identity() != null){
 					isContained = true;
 				}
 				if(!isContained){
@@ -342,7 +342,7 @@ public class XMLHelper {
 			for(CdmaCellData  cdmaCellData : cdmaCellDatas){
 				// TODO find if contained by another element, if not put it there
 				boolean isContained = false;
-				if(cdmaCellData.getIdentity() != null){
+				if(cdmaCellData.get_identity() != null){
 					isContained = true;
 				}
 				if(!isContained){

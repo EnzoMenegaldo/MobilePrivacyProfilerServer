@@ -41,8 +41,8 @@ public class KnownWifi implements DbClass {
 	public static Log log = LogFactory.getLog(KnownWifi.class);
 
 	public static final String XML_KNOWNWIFI = "KNOWNWIFI";
-	public static final String XML_ATT_ID = "id";
-	public static final String XML_ATT_CLIENT_ID = "client_id";
+	public static final String XML_ATT_ID = "_id";
+	public static final String XML_ATT_ANDROID_ID = "android_id";
 	public static final String XML_ATT_SSID = "ssid";
 	public static final String XML_ATT_BSSID = "bssid";
 	public static final String XML_ATT_ISCONFIGUREDWIFI = "isConfiguredWifi";
@@ -82,7 +82,7 @@ public class KnownWifi implements DbClass {
 	protected ForeignCollection<LogsWifi> logsWifi;
 
 	@DatabaseField
-	protected int client_id;
+	protected int android_id;
 
 	// Start of user code KnownWifi additional user properties
 	// End of user code
@@ -99,19 +99,19 @@ public class KnownWifi implements DbClass {
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	public int get_id() {
-		return client_id;
+	public int getAndroid_id() {
+		return android_id;
 	}
 	@JsonProperty
-	public void set_id(int id) {
-		this.client_id = id;
+	public void setAndroid_id(int id) {
+		this.android_id = id;
 	}
 
-	public int getId() {
+	public int get_id() {
 		return _id;
 	}
 	@JsonProperty
-	public void setId(int id) {
+	public void set_id(int id) {
 		this._id = id;
 	}
 
@@ -170,9 +170,9 @@ public class KnownWifi implements DbClass {
 		sb.append(this._id);
     	sb.append("\" ");
 		sb.append(" ");
-		sb.append(XML_ATT_CLIENT_ID);
+		sb.append(XML_ATT_ANDROID_ID);
 		sb.append("=\"");
-		sb.append(this.client_id);
+		sb.append(this._id);
 		sb.append("\" ");
 		sb.append(" ");
     	sb.append(XML_ATT_SSID);
