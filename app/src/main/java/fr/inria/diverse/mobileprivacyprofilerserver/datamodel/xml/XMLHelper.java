@@ -434,11 +434,11 @@ public class XMLHelper {
 		sb.append("\n\t</BATTERYUSAGES>\n");
 		sb.append("\n\t<WEBHISTORYS>");
 		try {	
-			List<WebHistory> webHistorys = dbContext.webHistoryDao.queryForAll();
-			for(WebHistory  webHistory : webHistorys){
+			List<NetActivity> netActivitys = dbContext.netActivityDao.queryForAll();
+			for(NetActivity  netActivity : netActivitys){
 				// TODO find if contained by another element, if not put it there
 					sb.append("\n");
-					sb.append(webHistory.toXML("\t\t", dbContext));
+					sb.append(netActivity.toXML("\t\t", dbContext));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -655,12 +655,12 @@ public class XMLHelper {
 					log.error("cannot create BatteryUsage "+e.getMessage(),e);
 				}
 			}
-			log.info("starting creation of WebHistory...");
-			for(WebHistory webHistory : parser.webHistorys){
+			log.info("starting creation of NetActivity...");
+			for(NetActivity netActivity : parser.netActivitys){
 				try {
-					dbContext.webHistoryDao.create(webHistory);
+					dbContext.netActivityDao.create(netActivity);
 				} catch (SQLException e) {
-					log.error("cannot create WebHistory "+e.getMessage(),e);
+					log.error("cannot create NetActivity "+e.getMessage(),e);
 				}
 			}
 			log.info("starting crossref...");
@@ -862,12 +862,12 @@ public class XMLHelper {
 					log.error("cannot update BatteryUsage "+e.getMessage(),e);
 				}
 			}
-			log.info("starting update DB of WebHistory...");
-			for(WebHistory elem : parser.webHistorysToUpdate){
+			log.info("starting update DB of NetActivity...");
+			for(NetActivity elem : parser.netActivitysToUpdate){
 				try {
-					dbContext.webHistoryDao.update(elem);
+					dbContext.netActivityDao.update(elem);
 				} catch (SQLException e) {
-					log.error("cannot update WebHistory "+e.getMessage(),e);
+					log.error("cannot update NetActivity "+e.getMessage(),e);
 				}
 			}
 			log.info("DB filled from XML");

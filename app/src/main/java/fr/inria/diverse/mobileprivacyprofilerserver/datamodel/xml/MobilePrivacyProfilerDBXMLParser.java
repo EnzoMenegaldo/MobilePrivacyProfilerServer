@@ -51,7 +51,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 	List<BluetoothLog> bluetoothLogs = new ArrayList<BluetoothLog>();
 	List<SMS> sMSs = new ArrayList<SMS>();
 	List<BatteryUsage> batteryUsages = new ArrayList<BatteryUsage>();
-	List<WebHistory> webHistorys = new ArrayList<WebHistory>();
+	List<NetActivity> netActivitys = new ArrayList<NetActivity>();
 	Set<MobilePrivacyProfilerDB_metadata> mobilePrivacyProfilerDB_metadatasToUpdate = new HashSet<MobilePrivacyProfilerDB_metadata>();
 	Set<ApplicationHistory> applicationHistorysToUpdate = new HashSet<ApplicationHistory>();
 	Set<ApplicationUsageStats> applicationUsageStatssToUpdate = new HashSet<ApplicationUsageStats>();
@@ -76,7 +76,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 	Set<BluetoothLog> bluetoothLogsToUpdate = new HashSet<BluetoothLog>();
 	Set<SMS> sMSsToUpdate = new HashSet<SMS>();
 	Set<BatteryUsage> batteryUsagesToUpdate = new HashSet<BatteryUsage>();
-	Set<WebHistory> webHistorysToUpdate = new HashSet<WebHistory>();
+	Set<NetActivity> netActivitysToUpdate = new HashSet<NetActivity>();
 	Hashtable<String, MobilePrivacyProfilerDB_metadata> xmlId2MobilePrivacyProfilerDB_metadata = new Hashtable<String, MobilePrivacyProfilerDB_metadata>();
 	Hashtable<String, ApplicationHistory> xmlId2ApplicationHistory = new Hashtable<String, ApplicationHistory>();
 	Hashtable<String, ApplicationUsageStats> xmlId2ApplicationUsageStats = new Hashtable<String, ApplicationUsageStats>();
@@ -101,7 +101,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 	Hashtable<String, BluetoothLog> xmlId2BluetoothLog = new Hashtable<String, BluetoothLog>();
 	Hashtable<String, SMS> xmlId2SMS = new Hashtable<String, SMS>();
 	Hashtable<String, BatteryUsage> xmlId2BatteryUsage = new Hashtable<String, BatteryUsage>();
-	Hashtable<String, WebHistory> xmlId2WebHistory = new Hashtable<String, WebHistory>();
+	Hashtable<String, NetActivity> xmlId2NetActivity = new Hashtable<String, NetActivity>();
 
 	// minimize memory footprint by using static Strings
     public static final String ID_STRING = "android_id";
@@ -523,8 +523,8 @@ public class MobilePrivacyProfilerDBXMLParser {
 	            // batteryUsages.addAll(readBatteryUsages(parser,DATACLASSIFIER_BATTERYUSAGES));
 	        } else 
 		 	if (name.equals(DATACLASSIFIER_WEBHISTORYS)) {
-				webHistorys = readWebHistorys(parser,DATACLASSIFIER_WEBHISTORYS);
-	            // webHistorys.addAll(readWebHistorys(parser,DATACLASSIFIER_WEBHISTORYS));
+				netActivitys = readNetActivitys(parser,DATACLASSIFIER_WEBHISTORYS);
+	            // netActivitys.addAll(readNetActivitys(parser,DATACLASSIFIER_WEBHISTORYS));
 	        } else 
 			{
 	            skip(parser);
@@ -1014,10 +1014,10 @@ public class MobilePrivacyProfilerDBXMLParser {
 		return entries;
 	}
 	/**
-     * parser for a group of WebHistory
+     * parser for a group of NetActivity
      */
-	List<WebHistory> readWebHistorys(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
-		ArrayList<WebHistory> entries = new ArrayList<WebHistory>();
+	List<NetActivity> readNetActivitys(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
+		ArrayList<NetActivity> entries = new ArrayList<NetActivity>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -1025,7 +1025,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 	        }
 	        String name = parser.getName();
 			if (name.equals(DATACLASSIFIER_WEBHISTORY)) {
-	            entries.add(readWebHistory(parser));
+	            entries.add(readNetActivity(parser));
 	        } else {
 	            skip(parser);
 	        }
@@ -1722,13 +1722,13 @@ public class MobilePrivacyProfilerDBXMLParser {
 
 		return result;
 	}
-	WebHistory readWebHistory(XmlPullParser parser)  throws XmlPullParserException, IOException{
-		WebHistory result = new WebHistory();
+	NetActivity readNetActivity(XmlPullParser parser)  throws XmlPullParserException, IOException{
+		NetActivity result = new NetActivity();
 
 		parser.require(XmlPullParser.START_TAG, ns, DATACLASSIFIER_WEBHISTORY);
     	String currentTagName = parser.getName();
     			
-    	xmlId2WebHistory.put(parser.getAttributeValue(null, ID_STRING),result);		
+    	xmlId2NetActivity.put(parser.getAttributeValue(null, ID_STRING),result);
 		// TODO date = parser.getAttributeValue(null, DATAATT_WEBHISTORY_DATE);
 		result.setApplication(parser.getAttributeValue(null, DATAATT_WEBHISTORY_application));
 		result.setHostname(parser.getAttributeValue(null, DATAATT_WEBHISTORY_hostname));

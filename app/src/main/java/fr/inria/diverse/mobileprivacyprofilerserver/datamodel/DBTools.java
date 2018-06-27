@@ -78,7 +78,7 @@ public class DBTools {
 		dbContext.bluetoothLogDao = DaoManager.createDao(connectionSource, BluetoothLog.class);
 		dbContext.sMSDao = DaoManager.createDao(connectionSource, SMS.class);
 		dbContext.batteryUsageDao = DaoManager.createDao(connectionSource, BatteryUsage.class);
-		dbContext.webHistoryDao = DaoManager.createDao(connectionSource, WebHistory.class);
+		dbContext.netActivityDao = DaoManager.createDao(connectionSource, NetActivity.class);
 
 		return dbContext;
 	}
@@ -115,7 +115,7 @@ public class DBTools {
 		TableUtils.createTable(connectionSource, BluetoothLog.class);
 		TableUtils.createTable(connectionSource, SMS.class);
 		TableUtils.createTable(connectionSource, BatteryUsage.class);
-		TableUtils.createTable(connectionSource, WebHistory.class);
+		TableUtils.createTable(connectionSource, NetActivity.class);
 
 		
 		log.debug("databaseInitialisation() - End");

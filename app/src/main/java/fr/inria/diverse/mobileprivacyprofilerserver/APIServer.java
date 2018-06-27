@@ -279,13 +279,13 @@ private static MobilePrivacyProfilerDBHelper  dbHelper;
         return stringResponse;
     });
 
-	post("/WebHistory",(request, response)->{
-        Class type = WebHistory.class;
+	post("/NetActivity",(request, response)->{
+        Class type = NetActivity.class;
         //convert the request.body() into a List of the received object
-        List<WebHistory> list = deserializeList(request.body(),type,response);
+        List<NetActivity> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().webHistoryDao,response);
+        String stringResponse = storeData(list,type,getDBHelper().netActivityDao,response);
         return stringResponse;
     });
 

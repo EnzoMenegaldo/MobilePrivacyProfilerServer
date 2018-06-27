@@ -74,8 +74,8 @@ public class MobilePrivacyProfilerDBHelper {
 	//public RuntimeExceptionDao<SMS, Integer> sMSDao;
 	public Dao<BatteryUsage, Integer> batteryUsageDao;
 	//public RuntimeExceptionDao<BatteryUsage, Integer> batteryUsageDao;
-	public Dao<WebHistory, Integer> webHistoryDao;
-	//public RuntimeExceptionDao<WebHistory, Integer> webHistoryDao;
+	public Dao<NetActivity, Integer> netActivityDao;
+	//public RuntimeExceptionDao<NetActivity, Integer> netActivityDao;
 
 	
 	public MobilePrivacyProfilerDBHelper(){
@@ -106,7 +106,7 @@ public class MobilePrivacyProfilerDBHelper {
 		Dao<BluetoothLog, Integer> bluetoothLogDao,
 		Dao<SMS, Integer> sMSDao,
 		Dao<BatteryUsage, Integer> batteryUsageDao,
-		Dao<WebHistory, Integer> webHistoryDao        
+		Dao<NetActivity, Integer> netActivityDao
 	){
 		this.mobilePrivacyProfilerDB_metadataDao = mobilePrivacyProfilerDB_metadataDao;
 		this.applicationHistoryDao = applicationHistoryDao;
@@ -132,7 +132,7 @@ public class MobilePrivacyProfilerDBHelper {
 		this.bluetoothLogDao = bluetoothLogDao;
 		this.sMSDao = sMSDao;
 		this.batteryUsageDao = batteryUsageDao;
-		this.webHistoryDao = webHistoryDao;
+		this.netActivityDao = netActivityDao;
 	}
 
 	//Start of user code additional methods for MobilePrivacyProfilerDBHelper
