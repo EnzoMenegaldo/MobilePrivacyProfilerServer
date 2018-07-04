@@ -141,7 +141,7 @@ public class CdmaCellData implements DbClass {
 		this.userId = userId;
 	}
 
-	public Cell get_identity() {
+	public Cell getIdentity() {
 		try {
 			if(identity_mayNeedDBRefresh && _contextDB != null){
 				_contextDB.cellDao.refresh(this.identity);
@@ -156,7 +156,7 @@ public class CdmaCellData implements DbClass {
 		return this.identity;
 	}
 	@JsonProperty
-	public void set_identity(Cell identity) {
+	public void setIdentity(Cell identity) {
 		this.identity = identity;
 	}			
 
@@ -172,7 +172,7 @@ public class CdmaCellData implements DbClass {
 		sb.append(" ");
 		sb.append(XML_ATT_ANDROID_ID);
 		sb.append("=\"");
-		sb.append(this._id);
+		sb.append(this.android_id);
 		sb.append("\" ");
 		sb.append(" ");
     	sb.append(XML_ATT_LONGITUDE);

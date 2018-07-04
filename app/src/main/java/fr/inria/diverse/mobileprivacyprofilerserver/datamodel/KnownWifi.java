@@ -99,20 +99,20 @@ public class KnownWifi implements DbClass {
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	public int getAndroid_id() {
-		return android_id;
-	}
-	@JsonProperty
-	public void setAndroid_id(int id) {
-		this.android_id = id;
-	}
-
 	public int get_id() {
 		return _id;
 	}
 	@JsonProperty
 	public void set_id(int id) {
 		this._id = id;
+	}
+
+	public int getAndroid_id() {
+		return android_id;
+	}
+	@JsonProperty
+	public void setAndroid_id(int id) {
+		this.android_id = id;
 	}
 
 	public MobilePrivacyProfilerDBHelper getContextDB(){
@@ -172,7 +172,7 @@ public class KnownWifi implements DbClass {
 		sb.append(" ");
 		sb.append(XML_ATT_ANDROID_ID);
 		sb.append("=\"");
-		sb.append(this._id);
+		sb.append(this.android_id);
 		sb.append("\" ");
 		sb.append(" ");
     	sb.append(XML_ATT_SSID);

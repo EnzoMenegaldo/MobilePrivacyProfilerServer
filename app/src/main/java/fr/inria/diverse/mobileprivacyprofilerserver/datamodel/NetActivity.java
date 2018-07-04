@@ -39,7 +39,7 @@ public class NetActivity implements DbClass {
 
 	public static Log log = LogFactory.getLog(NetActivity.class);
 
-	public static final String XML_NETACTIVITY = "WEBHISTORY";
+	public static final String XML_NETACTIVITY = "NETACTIVITY";
 	public static final String XML_ATT_ID = "_id";
 	public static final String XML_ATT_ANDROID_ID = "android_id";
 	public static final String XML_ATT_DATE = "date";
@@ -99,20 +99,20 @@ public class NetActivity implements DbClass {
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-    public int getAndroid_id() {
-        return android_id;
-    }
-    @JsonProperty
-    public void setAndroid_id(int id) {
-        this.android_id = id;
-    }
-
 	public int get_id() {
 		return _id;
 	}
 	@JsonProperty
 	public void set_id(int id) {
 		this._id = id;
+	}
+
+	public int getAndroid_id() {
+		return android_id;
+	}
+	@JsonProperty
+	public void setAndroid_id(int id) {
+		this.android_id = id;
 	}
 
 	public MobilePrivacyProfilerDBHelper getContextDB(){
@@ -172,7 +172,7 @@ public class NetActivity implements DbClass {
 		sb.append(" ");
 		sb.append(XML_ATT_ANDROID_ID);
 		sb.append("=\"");
-		sb.append(this._id);
+		sb.append(this.android_id);
 		sb.append("\" ");
 		sb.append(" ");
     	sb.append(XML_ATT_DATE);

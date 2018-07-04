@@ -175,7 +175,7 @@ public class ContactPhysicalAddress implements DbClass {
 		sb.append(" ");
 		sb.append(XML_ATT_ANDROID_ID);
 		sb.append("=\"");
-		sb.append(this._id);
+		sb.append(this.android_id);
 		sb.append("\" ");
 		sb.append(" ");
     	sb.append(XML_ATT_ADDRESS);

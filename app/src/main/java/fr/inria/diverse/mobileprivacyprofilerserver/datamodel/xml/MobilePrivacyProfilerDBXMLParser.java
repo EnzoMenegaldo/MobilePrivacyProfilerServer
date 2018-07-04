@@ -104,7 +104,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 	Hashtable<String, NetActivity> xmlId2NetActivity = new Hashtable<String, NetActivity>();
 
 	// minimize memory footprint by using static Strings
-    public static final String ID_STRING = "android_id";
+    public static final String ID_STRING = "id";
 
 	public static final String DATACLASSIFIER_MOBILEPRIVACYPROFILERDB_METADATAS = "MOBILEPRIVACYPROFILERDB_METADATAS";
 	public static final String DATACLASSIFIER_MOBILEPRIVACYPROFILERDB_METADATA  = "MOBILEPRIVACYPROFILERDB_METADATA";
@@ -154,8 +154,8 @@ public class MobilePrivacyProfilerDBXMLParser {
 	public static final String DATACLASSIFIER_SMS  = "SMS";
 	public static final String DATACLASSIFIER_BATTERYUSAGES = "BATTERYUSAGES";
 	public static final String DATACLASSIFIER_BATTERYUSAGE  = "BATTERYUSAGE";
-	public static final String DATACLASSIFIER_WEBHISTORYS = "WEBHISTORYS";
-	public static final String DATACLASSIFIER_WEBHISTORY  = "WEBHISTORY";
+	public static final String DATACLASSIFIER_NETACTIVITYS = "NETACTIVITYS";
+	public static final String DATACLASSIFIER_NETACTIVITY  = "NETACTIVITY";
 
 	public static final String DATAATT_MOBILEPRIVACYPROFILERDB_METADATA_lastTransmissionDate = "lastTransmissionDate";
 	public static final String DATAATT_MOBILEPRIVACYPROFILERDB_METADATA_LASTTRANSMISSIONDATE = "LASTTRANSMISSIONDATE";
@@ -171,6 +171,8 @@ public class MobilePrivacyProfilerDBXMLParser {
 	public static final String DATAATT_MOBILEPRIVACYPROFILERDB_METADATA_USERID = "USERID";
 	public static final String DATAATT_MOBILEPRIVACYPROFILERDB_METADATA_lastContactScan = "lastContactScan";
 	public static final String DATAATT_MOBILEPRIVACYPROFILERDB_METADATA_LASTCONTACTSCAN = "LASTCONTACTSCAN";
+	public static final String DATAATT_MOBILEPRIVACYPROFILERDB_METADATA_lastWifiScan = "lastWifiScan";
+	public static final String DATAATT_MOBILEPRIVACYPROFILERDB_METADATA_LASTWIFISCAN = "LASTWIFISCAN";
 	public static final String DATAATT_APPLICATIONHISTORY_appName = "appName";
 	public static final String DATAATT_APPLICATIONHISTORY_APPNAME = "APPNAME";
 	public static final String DATAATT_APPLICATIONHISTORY_packageName = "packageName";
@@ -387,16 +389,16 @@ public class MobilePrivacyProfilerDBXMLParser {
 	public static final String DATAATT_BATTERYUSAGE_PLUGTYPE = "PLUGTYPE";
 	public static final String DATAATT_BATTERYUSAGE_userId = "userId";
 	public static final String DATAATT_BATTERYUSAGE_USERID = "USERID";
-	public static final String DATAATT_WEBHISTORY_date = "date";
-	public static final String DATAATT_WEBHISTORY_DATE = "DATE";
-	public static final String DATAATT_WEBHISTORY_application = "application";
-	public static final String DATAATT_WEBHISTORY_APPLICATION = "APPLICATION";
-	public static final String DATAATT_WEBHISTORY_hostname = "hostname";
-	public static final String DATAATT_WEBHISTORY_HOSTNAME = "HOSTNAME";
-	public static final String DATAATT_WEBHISTORY_ipDestination = "ipDestination";
-	public static final String DATAATT_WEBHISTORY_IPDESTINATION = "IPDESTINATION";
-	public static final String DATAATT_WEBHISTORY_userId = "userId";
-	public static final String DATAATT_WEBHISTORY_USERID = "USERID";
+	public static final String DATAATT_NETACTIVITY_date = "date";
+	public static final String DATAATT_NETACTIVITY_DATE = "DATE";
+	public static final String DATAATT_NETACTIVITY_application = "application";
+	public static final String DATAATT_NETACTIVITY_APPLICATION = "APPLICATION";
+	public static final String DATAATT_NETACTIVITY_hostname = "hostname";
+	public static final String DATAATT_NETACTIVITY_HOSTNAME = "HOSTNAME";
+	public static final String DATAATT_NETACTIVITY_ipDestination = "ipDestination";
+	public static final String DATAATT_NETACTIVITY_IPDESTINATION = "IPDESTINATION";
+	public static final String DATAATT_NETACTIVITY_userId = "userId";
+	public static final String DATAATT_NETACTIVITY_USERID = "USERID";
 
 
 
@@ -522,9 +524,9 @@ public class MobilePrivacyProfilerDBXMLParser {
 				batteryUsages = readBatteryUsages(parser,DATACLASSIFIER_BATTERYUSAGES);
 	            // batteryUsages.addAll(readBatteryUsages(parser,DATACLASSIFIER_BATTERYUSAGES));
 	        } else 
-		 	if (name.equals(DATACLASSIFIER_WEBHISTORYS)) {
-				netActivitys = readNetActivitys(parser,DATACLASSIFIER_WEBHISTORYS);
-	            // netActivitys.addAll(readNetActivitys(parser,DATACLASSIFIER_WEBHISTORYS));
+		 	if (name.equals(DATACLASSIFIER_NETACTIVITYS)) {
+				netActivitys = readNetActivitys(parser,DATACLASSIFIER_NETACTIVITYS);
+	            // netActivitys.addAll(readNetActivitys(parser,DATACLASSIFIER_NETACTIVITYS));
 	        } else 
 			{
 	            skip(parser);
@@ -1024,7 +1026,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 	            continue;
 	        }
 	        String name = parser.getName();
-			if (name.equals(DATACLASSIFIER_WEBHISTORY)) {
+			if (name.equals(DATACLASSIFIER_NETACTIVITY)) {
 	            entries.add(readNetActivity(parser));
 	        } else {
 	            skip(parser);
@@ -1048,6 +1050,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 		// TODO lastCallScan = parser.getAttributeValue(null, DATAATT_MOBILEPRIVACYPROFILERDB_METADATA_LASTCALLSCAN);
 		result.setUserId(parser.getAttributeValue(null, DATAATT_MOBILEPRIVACYPROFILERDB_METADATA_userId));
 		// TODO lastContactScan = parser.getAttributeValue(null, DATAATT_MOBILEPRIVACYPROFILERDB_METADATA_LASTCONTACTSCAN);
+		// TODO lastWifiScan = parser.getAttributeValue(null, DATAATT_MOBILEPRIVACYPROFILERDB_METADATA_LASTWIFISCAN);
 		while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
@@ -1524,8 +1527,18 @@ public class MobilePrivacyProfilerDBXMLParser {
 				//result.getHistory().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
 				refCommands.add(new Cell_addContainedHistory_RefCommand(result,entries));	    
 	        } else
-					// TODO deal with owned ref cdmaposition
-					// TODO deal with owned ref otherPosition
+			if (currentTagName.equals(DATAREF_CELL_cdmaposition)) {
+				List<CdmaCellData> entries = readCdmaCellDatas(parser,DATAREF_CELL_cdmaposition);	
+				cdmaCellDatas.addAll(entries); // add for inclusion in the DB
+				//result.getCdmaposition().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
+				refCommands.add(new Cell_addContainedCdmaposition_RefCommand(result,entries));	    
+	        } else
+			if (currentTagName.equals(DATAREF_CELL_otherPosition)) {
+				List<OtherCellData> entries = readOtherCellDatas(parser,DATAREF_CELL_otherPosition);	
+				otherCellDatas.addAll(entries); // add for inclusion in the DB
+				//result.getOtherPosition().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
+				refCommands.add(new Cell_addContainedOtherPosition_RefCommand(result,entries));	    
+	        } else
 	        {
 	            skip(parser);
 	        }
@@ -1553,7 +1566,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 			if (currentTagName.equals(DATAREF_OTHERCELLDATA_identity)) {	
 				parser.require(XmlPullParser.START_TAG, ns, DATAREF_OTHERCELLDATA_identity);
 	            String id = readText(parser);
-				refCommands.add(new OtherCellData_set_identity_RefCommand(result,id, this));
+				refCommands.add(new OtherCellData_setIdentity_RefCommand(result,id, this));
 				parser.require(XmlPullParser.END_TAG, ns, DATAREF_OTHERCELLDATA_identity);	    
 	        } else
 	        {
@@ -1581,7 +1594,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 			if (currentTagName.equals(DATAREF_CDMACELLDATA_identity)) {	
 				parser.require(XmlPullParser.START_TAG, ns, DATAREF_CDMACELLDATA_identity);
 	            String id = readText(parser);
-				refCommands.add(new CdmaCellData_set_identity_RefCommand(result,id, this));
+				refCommands.add(new CdmaCellData_setIdentity_RefCommand(result,id, this));
 				parser.require(XmlPullParser.END_TAG, ns, DATAREF_CDMACELLDATA_identity);	    
 	        } else
 	        {
@@ -1725,15 +1738,15 @@ public class MobilePrivacyProfilerDBXMLParser {
 	NetActivity readNetActivity(XmlPullParser parser)  throws XmlPullParserException, IOException{
 		NetActivity result = new NetActivity();
 
-		parser.require(XmlPullParser.START_TAG, ns, DATACLASSIFIER_WEBHISTORY);
+		parser.require(XmlPullParser.START_TAG, ns, DATACLASSIFIER_NETACTIVITY);
     	String currentTagName = parser.getName();
     			
-    	xmlId2NetActivity.put(parser.getAttributeValue(null, ID_STRING),result);
-		// TODO date = parser.getAttributeValue(null, DATAATT_WEBHISTORY_DATE);
-		result.setApplication(parser.getAttributeValue(null, DATAATT_WEBHISTORY_application));
-		result.setHostname(parser.getAttributeValue(null, DATAATT_WEBHISTORY_hostname));
-		result.setIpDestination(parser.getAttributeValue(null, DATAATT_WEBHISTORY_ipDestination));
-		result.setUserId(parser.getAttributeValue(null, DATAATT_WEBHISTORY_userId));
+    	xmlId2NetActivity.put(parser.getAttributeValue(null, ID_STRING),result);		
+		// TODO date = parser.getAttributeValue(null, DATAATT_NETACTIVITY_DATE);
+		result.setApplication(parser.getAttributeValue(null, DATAATT_NETACTIVITY_application));
+		result.setHostname(parser.getAttributeValue(null, DATAATT_NETACTIVITY_hostname));
+		result.setIpDestination(parser.getAttributeValue(null, DATAATT_NETACTIVITY_ipDestination));
+		result.setUserId(parser.getAttributeValue(null, DATAATT_NETACTIVITY_userId));
 		while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
@@ -2083,48 +2096,52 @@ public class MobilePrivacyProfilerDBXMLParser {
 		}
 		
 	}
-	class Cell_setContainedCdmaposition_RefCommand extends RefCommand{
-	Cell container;
-		CdmaCellData containedElement;
+	class Cell_addContainedCdmaposition_RefCommand extends RefCommand{
+		Cell container;
+		List<CdmaCellData> containedElements;
 		
-		public Cell_setContainedCdmaposition_RefCommand(Cell container,
-				CdmaCellData containedElement) {
+		public Cell_addContainedCdmaposition_RefCommand(Cell container,
+				List<CdmaCellData> containedElements) {
 			super();
 			this.container = container;
-			this.containedElement = containedElement;
+			this.containedElements = containedElements;
 		}
 
 		@Override
 		public void run() {
-			containedElement.set_identity(container);
-			cdmaCellDatasToUpdate.add(containedElement);			
+			for (CdmaCellData element : containedElements) {				
+				element.setIdentity(container);
+				cdmaCellDatasToUpdate.add(element);
+			}
 		}
 		
 	}
-	class Cell_setContainedOtherPosition_RefCommand extends RefCommand{
-	Cell container;
-		OtherCellData containedElement;
+	class Cell_addContainedOtherPosition_RefCommand extends RefCommand{
+		Cell container;
+		List<OtherCellData> containedElements;
 		
-		public Cell_setContainedOtherPosition_RefCommand(Cell container,
-				OtherCellData containedElement) {
+		public Cell_addContainedOtherPosition_RefCommand(Cell container,
+				List<OtherCellData> containedElements) {
 			super();
 			this.container = container;
-			this.containedElement = containedElement;
+			this.containedElements = containedElements;
 		}
 
 		@Override
 		public void run() {
-			containedElement.set_identity(container);
-			otherCellDatasToUpdate.add(containedElement);			
+			for (OtherCellData element : containedElements) {				
+				element.setIdentity(container);
+				otherCellDatasToUpdate.add(element);
+			}
 		}
 		
 	}
-	class OtherCellData_set_identity_RefCommand extends RefCommand{
+	class OtherCellData_setIdentity_RefCommand extends RefCommand{
 		OtherCellData self;
 		String referencedElementID;
 		MobilePrivacyProfilerDBXMLParser parser;
 		
-		public OtherCellData_set_identity_RefCommand(OtherCellData self,
+		public OtherCellData_setIdentity_RefCommand(OtherCellData self,
 				String referencedElementID, MobilePrivacyProfilerDBXMLParser parser) {
 			super();
 			this.self = self;
@@ -2134,16 +2151,16 @@ public class MobilePrivacyProfilerDBXMLParser {
 
 		@Override
 		public void run() {
-			self.set_identity(parser.xmlId2Cell.get(referencedElementID));
+			self.setIdentity(parser.xmlId2Cell.get(referencedElementID));
 			otherCellDatasToUpdate.add(self);
 		}
 	}
-	class CdmaCellData_set_identity_RefCommand extends RefCommand{
+	class CdmaCellData_setIdentity_RefCommand extends RefCommand{
 		CdmaCellData self;
 		String referencedElementID;
 		MobilePrivacyProfilerDBXMLParser parser;
 		
-		public CdmaCellData_set_identity_RefCommand(CdmaCellData self,
+		public CdmaCellData_setIdentity_RefCommand(CdmaCellData self,
 				String referencedElementID, MobilePrivacyProfilerDBXMLParser parser) {
 			super();
 			this.self = self;
@@ -2153,7 +2170,7 @@ public class MobilePrivacyProfilerDBXMLParser {
 
 		@Override
 		public void run() {
-			self.set_identity(parser.xmlId2Cell.get(referencedElementID));
+			self.setIdentity(parser.xmlId2Cell.get(referencedElementID));
 			cdmaCellDatasToUpdate.add(self);
 		}
 	}

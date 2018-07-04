@@ -40,8 +40,8 @@ public class LogsWifi implements DbClass {
 	public static Log log = LogFactory.getLog(LogsWifi.class);
 
 	public static final String XML_LOGSWIFI = "LOGSWIFI";
-	public static final String XML_ATT_ANDROID_ID = "android_id";
 	public static final String XML_ATT_ID = "_id";
+	public static final String XML_ATT_ANDROID_ID = "android_id";
 	public static final String XML_ATT_TIMESTAMP = "timeStamp";
 	public static final String XML_ATT_USERID = "userId";
 	public static final String XML_REF_KNOWNWIFI = "knownWifi";
@@ -91,20 +91,20 @@ public class LogsWifi implements DbClass {
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	public int getAndroid_id() {
-		return android_id;
-	}
-	@JsonProperty
-	public void setAndroid_id(int id) {
-		this.android_id = id;
-	}
-
 	public int get_id() {
 		return _id;
 	}
 	@JsonProperty
 	public void set_id(int id) {
 		this._id = id;
+	}
+
+	public int getAndroid_id() {
+		return android_id;
+	}
+	@JsonProperty
+	public void setAndroid_id(int id) {
+		this.android_id = id;
 	}
 
 	public MobilePrivacyProfilerDBHelper getContextDB(){
@@ -155,7 +155,7 @@ public class LogsWifi implements DbClass {
 		StringBuilder sb = new StringBuilder();
 		sb.append(indent+"<");
     	sb.append(XML_LOGSWIFI);
-		sb.append(" "+XML_ATT_ANDROID_ID+"=\"");
+		sb.append(" "+XML_ATT_ID+"=\"");
 		sb.append(this._id);
     	sb.append("\" ");
 		sb.append(" ");

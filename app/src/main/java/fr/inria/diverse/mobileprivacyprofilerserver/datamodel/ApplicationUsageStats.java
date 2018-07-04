@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
   */ 
 @DatabaseTable(tableName = "applicationUsageStats")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
-                  property  = "android_id",
+                  property  = "_id",
 				  scope = ApplicationUsageStats.class)
 public class ApplicationUsageStats implements DbClass {
 
@@ -114,20 +114,20 @@ public class ApplicationUsageStats implements DbClass {
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	public int getAndroid_id() {
-		return android_id;
-	}
-	@JsonProperty
-	public void setAndroid_id(int id) {
-		this.android_id = id;
-	}
-
 	public int get_id() {
 		return _id;
 	}
 	@JsonProperty
 	public void set_id(int id) {
 		this._id = id;
+	}
+
+	public int getAndroid_id() {
+		return android_id;
+	}
+	@JsonProperty
+	public void setAndroid_id(int id) {
+		this.android_id = id;
 	}
 
 	public MobilePrivacyProfilerDBHelper getContextDB(){
@@ -206,7 +206,7 @@ public class ApplicationUsageStats implements DbClass {
 		StringBuilder sb = new StringBuilder();
 		sb.append(indent+"<");
     	sb.append(XML_APPLICATIONUSAGESTATS);
-		sb.append(" "+XML_ATT_ANDROID_ID+"=\"");
+		sb.append(" "+XML_ATT_ID+"=\"");
 		sb.append(this._id);
     	sb.append("\" ");
 		sb.append(" ");

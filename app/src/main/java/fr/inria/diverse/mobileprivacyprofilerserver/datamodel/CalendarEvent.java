@@ -40,8 +40,8 @@ public class CalendarEvent implements DbClass {
 	public static Log log = LogFactory.getLog(CalendarEvent.class);
 
 	public static final String XML_CALENDAREVENT = "CALENDAREVENT";
-	public static final String XML_ATT_ANDROID_ID = "android_id";
 	public static final String XML_ATT_ID = "_id";
+	public static final String XML_ATT_ANDROID_ID = "android_id";
 	public static final String XML_ATT_EVENTLABEL = "eventLabel";
 	public static final String XML_ATT_STARTDATE = "startDate";
 	public static final String XML_ATT_ENDDATE = "endDate";
@@ -110,20 +110,20 @@ public class CalendarEvent implements DbClass {
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	public int getAndroid_id() {
-		return android_id;
-	}
-	@JsonProperty
-	public void setAndroid_id(int id) {
-		this.android_id = id;
-	}
-
 	public int get_id() {
 		return _id;
 	}
 	@JsonProperty
 	public void set_id(int id) {
 		this._id = id;
+	}
+
+	public int getAndroid_id() {
+		return android_id;
+	}
+	@JsonProperty
+	public void setAndroid_id(int id) {
+		this.android_id = id;
 	}
 
 	public MobilePrivacyProfilerDBHelper getContextDB(){
@@ -191,7 +191,7 @@ public class CalendarEvent implements DbClass {
 		StringBuilder sb = new StringBuilder();
 		sb.append(indent+"<");
     	sb.append(XML_CALENDAREVENT);
-		sb.append(" "+XML_ATT_ANDROID_ID+"=\"");
+		sb.append(" "+XML_ATT_ID+"=\"");
 		sb.append(this._id);
     	sb.append("\" ");
 		sb.append(" ");

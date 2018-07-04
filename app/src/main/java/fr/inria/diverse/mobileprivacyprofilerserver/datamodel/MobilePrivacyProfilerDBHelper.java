@@ -106,7 +106,7 @@ public class MobilePrivacyProfilerDBHelper {
 		Dao<BluetoothLog, Integer> bluetoothLogDao,
 		Dao<SMS, Integer> sMSDao,
 		Dao<BatteryUsage, Integer> batteryUsageDao,
-		Dao<NetActivity, Integer> netActivityDao
+		Dao<NetActivity, Integer> netActivityDao        
 	){
 		this.mobilePrivacyProfilerDB_metadataDao = mobilePrivacyProfilerDB_metadataDao;
 		this.applicationHistoryDao = applicationHistoryDao;

@@ -61,10 +61,6 @@ public class Cell implements DbClass {
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
-	@JsonIgnore
-	public boolean cdmaposition_mayNeedDBRefresh = true;
-	@JsonIgnore
-	public boolean otherPosition_mayNeedDBRefresh = true;
 	
 
 	@DatabaseField
@@ -78,13 +74,13 @@ public class Cell implements DbClass {
 	@JsonIgnore
 	protected ForeignCollection<NeighboringCellHistory> history;
 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
-	// @JsonManagedReference(value="cell_cdmacelldata")
-	protected CdmaCellData cdmaposition;
+	@ForeignCollectionField(eager = false, foreignFieldName = "identity")
+	@JsonIgnore
+	protected ForeignCollection<CdmaCellData> cdmaposition;
 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
-	// @JsonManagedReference(value="cell_othercelldata")
-	protected OtherCellData otherPosition;
+	@ForeignCollectionField(eager = false, foreignFieldName = "identity")
+	@JsonIgnore
+	protected ForeignCollection<OtherCellData> otherPosition;
 
 	@DatabaseField
 	protected int android_id;
@@ -148,42 +144,20 @@ public class Cell implements DbClass {
 	
 
 			
-	public CdmaCellData getCdmaposition() {
-		try {
-			if(cdmaposition_mayNeedDBRefresh && _contextDB != null){
-				_contextDB.cdmaCellDataDao.refresh(this.cdmaposition);
-				cdmaposition_mayNeedDBRefresh = false;
-			}
-		} catch (SQLException e) {
-			log.error(e.getMessage(),e);
-		}
-		if(_contextDB==null && this.cdmaposition == null){
-			log.warn("Cell may not be properly refreshed from DB (_id="+_id+")");
-		}
-		return this.cdmaposition;
+	public List	<CdmaCellData> getCdmaposition() {
+		if(null==this.cdmaposition){return null;}
+		return new ArrayList<CdmaCellData>(cdmaposition);
 	}
-	@JsonProperty
-	public void setCdmaposition(CdmaCellData cdmaposition) {
-		this.cdmaposition = cdmaposition;
-	}			
-	public OtherCellData getOtherPosition() {
-		try {
-			if(otherPosition_mayNeedDBRefresh && _contextDB != null){
-				_contextDB.otherCellDataDao.refresh(this.otherPosition);
-				otherPosition_mayNeedDBRefresh = false;
-			}
-		} catch (SQLException e) {
-			log.error(e.getMessage(),e);
-		}
-		if(_contextDB==null && this.otherPosition == null){
-			log.warn("Cell may not be properly refreshed from DB (_id="+_id+")");
-		}
-		return this.otherPosition;
+	
+
+			
+	public List	<OtherCellData> getOtherPosition() {
+		if(null==this.otherPosition){return null;}
+		return new ArrayList<OtherCellData>(otherPosition);
 	}
-	@JsonProperty
-	public void setOtherPosition(OtherCellData otherPosition) {
-		this.otherPosition = otherPosition;
-	}			
+	
+
+			
 
 
 
@@ -197,7 +171,7 @@ public class Cell implements DbClass {
 		sb.append(" ");
 		sb.append(XML_ATT_ANDROID_ID);
 		sb.append("=\"");
-		sb.append(this._id);
+		sb.append(this.android_id);
 		sb.append("\" ");
 		sb.append(" ");
     	sb.append(XML_ATT_CELLID);
@@ -219,16 +193,20 @@ public class Cell implements DbClass {
 	    	}
 		}
 		sb.append("</"+XML_REF_HISTORY+">");		
-		if(this.cdmaposition!= null){
-			sb.append("\n"+indent+"\t<"+XML_REF_CDMAPOSITION+">");
-			sb.append(this.cdmaposition.get_id());
-	    	sb.append("</"+XML_REF_CDMAPOSITION+">");
+		sb.append("\n"+indent+"\t<"+XML_REF_CDMAPOSITION+">");
+		if(this.cdmaposition != null){
+			for(CdmaCellData ref : this.cdmaposition){
+				sb.append("\n"+ref.toXML(indent+"\t\t", contextDB));
+	    	}
 		}
-		if(this.otherPosition!= null){
-			sb.append("\n"+indent+"\t<"+XML_REF_OTHERPOSITION+">");
-			sb.append(this.otherPosition.get_id());
-	    	sb.append("</"+XML_REF_OTHERPOSITION+">");
+		sb.append("</"+XML_REF_CDMAPOSITION+">");		
+		sb.append("\n"+indent+"\t<"+XML_REF_OTHERPOSITION+">");
+		if(this.otherPosition != null){
+			for(OtherCellData ref : this.otherPosition){
+				sb.append("\n"+ref.toXML(indent+"\t\t", contextDB));
+	    	}
 		}
+		sb.append("</"+XML_REF_OTHERPOSITION+">");		
 		// TODO deal with other case
 
 		sb.append("</"+XML_CELL+">");

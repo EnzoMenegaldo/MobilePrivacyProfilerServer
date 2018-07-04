@@ -323,7 +323,7 @@ public class XMLHelper {
 			for(OtherCellData  otherCellData : otherCellDatas){
 				// TODO find if contained by another element, if not put it there
 				boolean isContained = false;
-				if(otherCellData.get_identity() != null){
+				if(otherCellData.getIdentity() != null){
 					isContained = true;
 				}
 				if(!isContained){
@@ -342,7 +342,7 @@ public class XMLHelper {
 			for(CdmaCellData  cdmaCellData : cdmaCellDatas){
 				// TODO find if contained by another element, if not put it there
 				boolean isContained = false;
-				if(cdmaCellData.get_identity() != null){
+				if(cdmaCellData.getIdentity() != null){
 					isContained = true;
 				}
 				if(!isContained){
@@ -432,7 +432,7 @@ public class XMLHelper {
 			e.printStackTrace();
 		}
 		sb.append("\n\t</BATTERYUSAGES>\n");
-		sb.append("\n\t<WEBHISTORYS>");
+		sb.append("\n\t<NETACTIVITYS>");
 		try {	
 			List<NetActivity> netActivitys = dbContext.netActivityDao.queryForAll();
 			for(NetActivity  netActivity : netActivitys){
@@ -444,7 +444,7 @@ public class XMLHelper {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		sb.append("\n\t</WEBHISTORYS>\n");
+		sb.append("\n\t</NETACTIVITYS>\n");
 		sb.append("\n</MOBILEPRIVACYPROFILERDB>");
 		return sb.toString();
 	}

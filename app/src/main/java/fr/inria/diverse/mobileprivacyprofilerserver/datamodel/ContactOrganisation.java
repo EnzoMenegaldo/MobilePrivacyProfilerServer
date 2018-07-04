@@ -33,15 +33,15 @@ import org.apache.commons.logging.LogFactory;
   */ 
 @DatabaseTable(tableName = "contactOrganisation")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
-                  property  = "android_id",
+                  property  = "_id",
 				  scope = ContactOrganisation.class)
 public class ContactOrganisation implements DbClass {
 
 	public static Log log = LogFactory.getLog(ContactOrganisation.class);
 
 	public static final String XML_CONTACTORGANISATION = "CONTACTORGANISATION";
-	public static final String XML_ATT_ANDROID_ID = "android_id";
 	public static final String XML_ATT_ID = "_id";
+	public static final String XML_ATT_ANDROID_ID = "android_id";
 	public static final String XML_ATT_COMPANY = "company";
 	public static final String XML_ATT_TITLE = "title";
 	public static final String XML_ATT_USERID = "userId";
@@ -95,20 +95,20 @@ public class ContactOrganisation implements DbClass {
 	/**
 	 * raw_id from client converted as part of a primary key in combination of user UUID
 	 */
-	public int getAndroid_id() {
-		return android_id;
-	}
-	@JsonProperty
-	public void setAndroid_id(int id) {
-		this.android_id = id;
-	}
-
 	public int get_id() {
 		return _id;
 	}
 	@JsonProperty
 	public void set_id(int id) {
 		this._id = id;
+	}
+
+	public int getAndroid_id() {
+		return android_id;
+	}
+	@JsonProperty
+	public void setAndroid_id(int id) {
+		this.android_id = id;
 	}
 
 	public MobilePrivacyProfilerDBHelper getContextDB(){
@@ -166,7 +166,7 @@ public class ContactOrganisation implements DbClass {
 		StringBuilder sb = new StringBuilder();
 		sb.append(indent+"<");
     	sb.append(XML_CONTACTORGANISATION);
-		sb.append(" "+XML_ATT_ANDROID_ID+"=\"");
+		sb.append(" "+XML_ATT_ID+"=\"");
 		sb.append(this._id);
     	sb.append("\" ");
 		sb.append(" ");
