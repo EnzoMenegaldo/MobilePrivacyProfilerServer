@@ -69,10 +69,10 @@ public class CalendarEvent implements DbClass {
 	protected java.lang.String eventLabel;
 
 	@DatabaseField
-	protected java.lang.String startDate;
+	protected java.util.Date startDate;
 
 	@DatabaseField
-	protected java.lang.String endDate;
+	protected java.util.Date endDate;
 
 	/** place where the event is supposed to occur */ 
 	@DatabaseField
@@ -96,7 +96,7 @@ public class CalendarEvent implements DbClass {
 	// End of user code
 	
 	public CalendarEvent() {} // needed by ormlite
-	public CalendarEvent(java.lang.String eventLabel, java.lang.String startDate, java.lang.String endDate, java.lang.String place, java.lang.String participants, long eventId, java.lang.String userId) {
+	public CalendarEvent(java.lang.String eventLabel, java.util.Date startDate, java.util.Date endDate, java.lang.String place, java.lang.String participants, long eventId, java.lang.String userId) {
 		super();
 		this.eventLabel = eventLabel;
 		this.startDate = startDate;
@@ -141,18 +141,18 @@ public class CalendarEvent implements DbClass {
 	public void setEventLabel(java.lang.String eventLabel) {
 		this.eventLabel = eventLabel;
 	}
-	public java.lang.String getStartDate() {
+	public java.util.Date getStartDate() {
 		return this.startDate;
 	}
 	@JsonProperty
-	public void setStartDate(java.lang.String startDate) {
+	public void setStartDate(java.util.Date startDate) {
 		this.startDate = startDate;
 	}
-	public java.lang.String getEndDate() {
+	public java.util.Date getEndDate() {
 		return this.endDate;
 	}
 	@JsonProperty
-	public void setEndDate(java.lang.String endDate) {
+	public void setEndDate(java.util.Date endDate) {
 		this.endDate = endDate;
 	}
 	public java.lang.String getPlace() {
@@ -207,12 +207,12 @@ public class CalendarEvent implements DbClass {
 		sb.append(" ");
     	sb.append(XML_ATT_STARTDATE);
     	sb.append("=\"");
-		sb.append(StringEscapeUtils.escapeXml(this.startDate));
+		sb.append(this.startDate);
     	sb.append("\" ");
 		sb.append(" ");
     	sb.append(XML_ATT_ENDDATE);
     	sb.append("=\"");
-		sb.append(StringEscapeUtils.escapeXml(this.endDate));
+		sb.append(this.endDate);
     	sb.append("\" ");
 		sb.append(" ");
     	sb.append(XML_ATT_PLACE);

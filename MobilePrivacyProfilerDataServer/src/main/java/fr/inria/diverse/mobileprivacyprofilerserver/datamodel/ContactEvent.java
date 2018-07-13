@@ -65,7 +65,7 @@ public class ContactEvent implements DbClass {
 	
 
 	@DatabaseField
-	protected java.lang.String startDate;
+	protected java.util.Date startDate;
 
 	@DatabaseField
 	protected java.lang.String type;
@@ -85,7 +85,7 @@ public class ContactEvent implements DbClass {
 	// End of user code
 	
 	public ContactEvent() {} // needed by ormlite
-	public ContactEvent(java.lang.String startDate, java.lang.String type, java.lang.String userId) {
+	public ContactEvent(java.util.Date startDate, java.lang.String type, java.lang.String userId) {
 		super();
 		this.startDate = startDate;
 		this.type = type;
@@ -119,11 +119,11 @@ public class ContactEvent implements DbClass {
 		this._contextDB = contextDB;
 	}
 
-	public java.lang.String getStartDate() {
+	public java.util.Date getStartDate() {
 		return this.startDate;
 	}
 	@JsonProperty
-	public void setStartDate(java.lang.String startDate) {
+	public void setStartDate(java.util.Date startDate) {
 		this.startDate = startDate;
 	}
 	public java.lang.String getType() {
@@ -177,7 +177,7 @@ public class ContactEvent implements DbClass {
 		sb.append(" ");
     	sb.append(XML_ATT_STARTDATE);
     	sb.append("=\"");
-		sb.append(StringEscapeUtils.escapeXml(this.startDate));
+		sb.append(this.startDate);
     	sb.append("\" ");
 		sb.append(" ");
     	sb.append(XML_ATT_TYPE);
