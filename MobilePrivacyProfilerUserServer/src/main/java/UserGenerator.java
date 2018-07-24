@@ -24,7 +24,7 @@ public class UserGenerator {
             String email;
             while ((email = br.readLine()) != null) {
                 if(!DataBaseHelper.isUserRegistered(email)){
-                    DataBaseHelper.createUser(new User(email));
+                    DataBaseHelper.createUser(new User(email, DataBaseHelper.getLastUserId() +1));
                 }
             }
         } catch (IOException | SQLException e) {

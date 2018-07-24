@@ -1,3 +1,4 @@
+import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -5,6 +6,7 @@ import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -43,6 +45,35 @@ public class DataBaseHelper {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * @return the id of the last user registered
+     */
+    public static int getLastUserId() {
+
+        try {
+            CloseableIterator<User> iterator = userDao.iterator(ResultSet.TYPE_FORWARD_ONLY);
+            int tableSize = (int)userDao.countOf();
+            User lastUser = null;
+
+            if(tableSize == 0){
+                return 0;
+            }else if (tableSize == 1){
+                lastUser =  iterator.first();
+                iterator.closeQuietly();
+                return lastUser.get_id();
+            }else{
+                while (iterator.hasNext())
+                    lastUser =  iterator.next();
+
+                iterator.closeQuietly();
+                return lastUser.get_id();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
         }
     }
 
