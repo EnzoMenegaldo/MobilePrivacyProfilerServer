@@ -14,6 +14,11 @@ public class DataBaseHelper {
 
     public final static String DATABASE_URL = "jdbc:sqlite:run/database/UserDataBase.db";
 
+    public final static String SUCCESSFUL_AUTHENTICATION = "Authentification réussie";
+    public final static String ALREADY_LOGIN_ANOTHER_APP = "Votre compte est déjà lié à un autre appareil";
+    public final static String WRONG_INFORMATION = "Les informations que vous avez rentrées sont erronées";
+    public final static String DEVICE_ALREADY_USED = "Cet appareil est déjà lié à un compte";
+
 
     public static Dao<User, Integer> userDao;
 
@@ -74,23 +79,45 @@ public class DataBaseHelper {
      * @param password
      * @return
      */
-    public static boolean checkCredentials(String username, String password) {
+    public static String checkCredentials(String username, String password, String device) {
 
         try {
-            QueryBuilder<User, Integer> queryBuilder = userDao.queryBuilder();
-            queryBuilder.where().eq(User.USER_ID_XML,username);
+            QueryBuilder<User, Integer> queryBuilderByUsername = userDao.queryBuilder();
+            queryBuilderByUsername.where().eq(User.USER_USERNAME_XML,username);
+            //Get the first user who has this username;
+            User userByUsername = userDao.queryForFirst( queryBuilderByUsername.prepare());
 
-            PreparedQuery<User> preparedQuery = queryBuilder.prepare();
-            User user = userDao.queryForFirst(preparedQuery);
+            QueryBuilder<User, Integer> queryBuilderByDevice = userDao.queryBuilder();
+            queryBuilderByDevice.where().eq(User.USER_DEVICE_XML,device);
+            //Get the first user who has this device
+            User userByDevice = userDao.queryForFirst(queryBuilderByDevice.prepare());
 
-            if(user != null)
-                return Password.isExpectedPassword(password.toCharArray(),user.getSalt(),user.getPassword());
-
-            return false;
+            if(userByUsername == null)
+                return WRONG_INFORMATION;
+            else if(userByDevice == null){
+                if(!userByUsername.getDevice().equals("")){
+                    //Another user already logged in a device tries to log in another one
+                    return ALREADY_LOGIN_ANOTHER_APP;
+                }
+                //It's the first time the use log in the app. Check password
+                else if(Password.isExpectedPassword(password.toCharArray(), userByUsername.getSalt(), userByUsername.getPassword())) {
+                    userByUsername.setDevice(device);
+                    userDao.createOrUpdate(userByUsername);
+                    return SUCCESSFUL_AUTHENTICATION;
+                }else
+                    return WRONG_INFORMATION;
+            }
+            else if(userByUsername.equals(userByDevice)){
+                if(Password.isExpectedPassword(password.toCharArray(), userByUsername.getSalt(), userByUsername.getPassword()))
+                    return SUCCESSFUL_AUTHENTICATION;
+                else
+                    return WRONG_INFORMATION;
+            }else
+                return DEVICE_ALREADY_USED;
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 

@@ -10,7 +10,9 @@ import java.security.KeyStore;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.json.webtoken.JsonWebSignature;
 import com.sun.net.httpserver.*;
+import sun.net.www.protocol.http.HttpURLConnection;
 
 
 import javax.net.ssl.KeyManagerFactory;
@@ -57,18 +59,32 @@ public class AuthHttpServer {
     }
 
     static class AuthenticationHandler implements HttpHandler {
-        public void handle(HttpExchange t) throws IOException {
+        public void handle(HttpExchange http) throws IOException {
 
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNodeRoot = objectMapper.readTree(t.getRequestBody());
+            JsonNode jsonNodeRoot = objectMapper.readTree(http.getRequestBody());
 
             String username = jsonNodeRoot.get("username").asText();
             String password = jsonNodeRoot.get("password").asText();
+            String device = jsonNodeRoot.get("device").asText();
 
-            if(DataBaseHelper.checkCredentials(username,password))
-                t.sendResponseHeaders(200, -1);
-            else
-                t.sendResponseHeaders(404,-1);
+            String result = DataBaseHelper.checkCredentials(username,password,device);
+
+            byte[] byteResult = result.getBytes();
+
+            Headers responseHeaders = http.getResponseHeaders();
+            responseHeaders.set("Content-Type", "text/html");
+
+            if(result.equals(DataBaseHelper.SUCCESSFUL_AUTHENTICATION))
+                http.sendResponseHeaders(200, byteResult.length);
+            else{
+                http.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, byteResult.length);
+            }
+
+            OutputStream responseBody = http.getResponseBody();
+            responseBody.write(byteResult);
+            responseBody.flush();
+            responseBody.close();
         }
     }
 
