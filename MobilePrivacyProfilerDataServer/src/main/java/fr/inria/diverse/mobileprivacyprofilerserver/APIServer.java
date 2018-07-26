@@ -453,8 +453,8 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
             // - - - Data Base - - -
             DBTools dBTools = new DBTools();
             try {
-                File file = new File ("./run/database/MobilePrivacyProfilerDB.db");
-                log.info("Does \"./run/database/MobilePrivacyProfilerDB.db\" exist :"+file.exists());
+                File file = new File ("./database/MobilePrivacyProfilerDB.db");
+                log.info("Does \"./database/MobilePrivacyProfilerDB.db\" exist :"+file.exists());
 
                 JdbcConnectionSource connectionSource = null;
                 connectionSource = new JdbcConnectionSource(DBConstants.DATABASE_URL);
