@@ -1,16 +1,9 @@
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.InetSocketAddress;
-import java.net.URI;
-import java.nio.file.Files;
 import java.security.KeyStore;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.json.webtoken.JsonWebSignature;
 import com.sun.net.httpserver.*;
 import sun.net.www.protocol.http.HttpURLConnection;
 
@@ -25,11 +18,13 @@ public class AuthHttpServer {
     private static final int AUTHENTICATION_PORT = 8000;
     //We are using the same key and self certificate than the database server
     private static final String KEY_PASSWORD = "password";
-    private static final String KEY_PATH ="./ssl/keystore.jks";
+    private static final String KEY_PATH = "ssl/keystore.jks";
+
+
 
     public static void main(String[] args) throws Exception {
         new AuthHttpServer().start();
-        UserGenerator.INSTANCE.createUser(UserGenerator.email_file);
+        UserGenerator.INSTANCE.createUser();
     }
 
     void start() throws Exception {
@@ -40,6 +35,7 @@ public class AuthHttpServer {
 
         httpsServer.createContext("/Authenticate", new AuthenticationHandler());
         httpsServer.start();
+        System.out.println("Server started");
     }
 
     private SSLContext getSslContext() throws Exception {

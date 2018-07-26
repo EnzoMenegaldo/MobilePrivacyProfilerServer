@@ -6,6 +6,8 @@ import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -14,7 +16,8 @@ public class DataBaseHelper {
 
     public static final DataBaseHelper INSTANCE = new DataBaseHelper();
 
-    public final static String DATABASE_URL = "jdbc:sqlite:run/database/UserDataBase.db";
+    public final static String DATABASE_FILE = "database/UserDataBase.db";
+    public static String DATABASE_URL;
 
     public final static String SUCCESSFUL_AUTHENTICATION = "Authentification réussie";
     public final static String ALREADY_LOGIN_ANOTHER_APP = "Votre compte est déjà lié à un autre appareil";
@@ -28,11 +31,15 @@ public class DataBaseHelper {
 
         DBTools dBTools = new DBTools();
         try {
-            File file = new File ("./run/database/UserDataBase.db");
+
+            //We have to add '.' to the classpath of the jar to make it work
+            File database_file = new File (DATABASE_FILE);
+
+            DATABASE_URL = "jdbc:sqlite:"+DATABASE_FILE;
 
             JdbcConnectionSource connectionSource = new JdbcConnectionSource(DATABASE_URL);
 
-            if(!file.exists()){
+            if(!database_file.exists()){
                 dBTools.initializeSQLite(DATABASE_URL);
                 dBTools.databaseInitialisation(connectionSource);
             }
@@ -105,7 +112,7 @@ public class DataBaseHelper {
     }
 
     /**
-     * return true if the credentials are correct
+     * return true if the gmail_$credentials are correct
      * @param username
      * @param password
      * @return

@@ -3,24 +3,28 @@ import java.sql.SQLException;
 
 public class UserGenerator {
 
-    public static final int MAX_USER = 10;
     public static final UserGenerator INSTANCE = new UserGenerator();
-    public static final String email_file = "./run/database/email.txt";
+    private static final String email_file = "database/email.txt";
 
     private DataBaseHelper helper;
 
     private UserGenerator(){
+
         helper = DataBaseHelper.INSTANCE;
     }
 
     /**
      * Create all the users whose email address is in the file
-     * @param file
      */
-    public void createUser(String file){
+    public void createUser(){
         BufferedReader br;
         try {
-            br = new BufferedReader(new FileReader(file));
+            File file = new File(email_file);
+            if(!file.exists())
+                file.createNewFile();
+
+            br = new BufferedReader(new FileReader(email_file));
+
             String email;
             while ((email = br.readLine()) != null) {
                 if(!DataBaseHelper.isUserRegistered(email)){
