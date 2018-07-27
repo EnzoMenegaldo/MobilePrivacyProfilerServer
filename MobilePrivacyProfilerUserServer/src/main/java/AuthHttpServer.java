@@ -17,8 +17,8 @@ public class AuthHttpServer {
 
     private static final int AUTHENTICATION_PORT = 8000;
     //We are using the same key and self certificate than the database server
-    private static final String KEY_PASSWORD = "password";
-    private static final String KEY_PATH = "ssl/keystore.jks";
+//    private static final String KEY_PASSWORD = "password";
+ //   private static final String KEY_PATH = "ssl/keystore.jks";
 
 
 
@@ -28,17 +28,17 @@ public class AuthHttpServer {
     }
 
     void start() throws Exception {
-        HttpsServer httpsServer = HttpsServer.create(new InetSocketAddress(AUTHENTICATION_PORT), 0);
+        HttpServer httpsServer = HttpServer.create(new InetSocketAddress(AUTHENTICATION_PORT), 0);
 
-        SSLContext sslContext = getSslContext();
-        httpsServer.setHttpsConfigurator(new HttpsConfigurator(sslContext));
+//        SSLContext sslContext = getSslContext();
+ //       httpsServer.setHttpsConfigurator(new HttpsConfigurator(sslContext));
 
         httpsServer.createContext("/Authenticate", new AuthenticationHandler());
         httpsServer.start();
         System.out.println("Server started");
     }
 
-    private SSLContext getSslContext() throws Exception {
+   /* private SSLContext getSslContext() throws Exception {
         KeyStore ks = KeyStore.getInstance("JKS");
         ks.load(new FileInputStream(KEY_PATH), KEY_PASSWORD.toCharArray());
 
@@ -52,7 +52,7 @@ public class AuthHttpServer {
         sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 
         return sslContext;
-    }
+    }*/
 
     static class AuthenticationHandler implements HttpHandler {
         public void handle(HttpExchange http) throws IOException {

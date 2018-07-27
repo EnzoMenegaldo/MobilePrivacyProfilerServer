@@ -46,10 +46,6 @@ public class DataBaseHelper {
 
             dBTools.setupDatabase(connectionSource);
 
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

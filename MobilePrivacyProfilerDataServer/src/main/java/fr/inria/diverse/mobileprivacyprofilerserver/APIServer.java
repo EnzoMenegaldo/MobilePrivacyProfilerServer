@@ -36,15 +36,15 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
 	private static final int MAX_THREAD = 8;
 
 // Start of user code additional other code :
-	private static final String PASSWORD = "password";
-    private static final String KEY_PATH ="./ssl/keystore.jks";
+//	private static final String PASSWORD = "password";
+//    private static final String KEY_PATH ="./ssl/keystore.jks";
 // End of user code
 
     public static void main(String[] args) {
 
 // Start of user code additional main code :
 	threadPool(MAX_THREAD);
-	secure(KEY_PATH,PASSWORD,null,null);
+//	secure(KEY_PATH,PASSWORD,null,null);
 // End of user code
 
     get("/hello", (request, response) -> "Hello World");

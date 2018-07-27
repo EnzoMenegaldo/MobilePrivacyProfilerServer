@@ -1,7 +1,6 @@
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import sun.nio.cs.US_ASCII;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

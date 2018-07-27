@@ -18,7 +18,6 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.Message;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.mail.Session;
@@ -68,9 +67,8 @@ public class GmailUtil {
      * @param subject  subject of the email
      * @param bodyText body text of the email
      * @return the MimeMessage to be used to send email
-     * @throws MessagingException
      */
-    public static MimeMessage createEmail(String to, String from, String subject, String bodyText) throws MessagingException, javax.mail.MessagingException {
+    public static MimeMessage createEmail(String to, String from, String subject, String bodyText) throws javax.mail.MessagingException {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
 
@@ -89,9 +87,9 @@ public class GmailUtil {
      * @param emailContent Email to be set to raw of message
      * @return a message containing a base64url encoded email
      * @throws IOException
-     * @throws MessagingException
+     * @throws
      */
-    public static Message createMessageWithEmail(MimeMessage emailContent) throws MessagingException, IOException, javax.mail.MessagingException {
+    public static Message createMessageWithEmail(MimeMessage emailContent) throws IOException, javax.mail.MessagingException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         emailContent.writeTo(buffer);
         byte[] bytes = buffer.toByteArray();
@@ -107,12 +105,11 @@ public class GmailUtil {
      * @param from
      * @param subject
      * @param bodyText
-     * @throws MessagingException
      * @throws IOException
      * @throws javax.mail.MessagingException
      * @throws GeneralSecurityException
      */
-    public static void sendMessage(String to, String from, String subject, String bodyText) throws MessagingException, IOException, javax.mail.MessagingException, GeneralSecurityException {
+    public static void sendMessage(String to, String from, String subject, String bodyText) throws IOException, javax.mail.MessagingException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Gmail service = new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)

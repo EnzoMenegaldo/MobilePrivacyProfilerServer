@@ -1,7 +1,6 @@
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 
 
 import java.io.IOException;
@@ -108,7 +107,7 @@ public class User {
     public void sendPasswordToEmail(String password){
         try {
             GmailUtil.sendMessage(this.email,PROFILE_EMAIL,"Profile : nom d'utilisateur et mot de passe","Bonjour,\n\nVous trouverez ci-dessous votre nom d'utilisateur ainsi que votre mot passe nécessaires lors de votre connection à l'application.\nNom d'utilisateur : "+ getUsername()+"\nMot de passe : "+password+"\n\nL'équipe Profile.");
-        } catch (MessagingException | javax.mail.MessagingException | IOException | GeneralSecurityException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

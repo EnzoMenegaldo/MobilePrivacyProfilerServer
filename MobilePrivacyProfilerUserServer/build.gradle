@@ -9,6 +9,10 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://maven.google.com'
+    }
+
 }
 
 jar {
@@ -39,7 +43,6 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
     // https://mvnrepository.com/artifact/org.xmlpull/com.springsource.org.xmlpull
-    compile group: 'org.xmlpull', name: 'com.springsource.org.xmlpull', version: '1.1.4'
 
     // https://mvnrepository.com/artifact/commons-codec/commons-codec
     compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
