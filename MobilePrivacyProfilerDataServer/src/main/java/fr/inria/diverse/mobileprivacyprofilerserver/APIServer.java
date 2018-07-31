@@ -1,16 +1,18 @@
 package fr.inria.diverse.mobileprivacyprofilerserver;/*  */
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.*;
-import fr.inria.diverse.mobileprivacyprofilerserver.datamodel.*;
+import fr.inria.diverse.mobileprivacyprofilerserver.database.data.*;
+import fr.inria.diverse.mobileprivacyprofilerserver.database.user.UserDataBaseHelper;
+import fr.inria.diverse.mobileprivacyprofilerserver.utils.AuthenticationUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import spark.Response;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -36,27 +38,73 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
 	private static final int MAX_THREAD = 8;
 
 // Start of user code additional other code :
-//	private static final String PASSWORD = "password";
-//    private static final String KEY_PATH ="./ssl/keystore.jks";
+
 // End of user code
 
     public static void main(String[] args) {
 
 // Start of user code additional main code :
 	threadPool(MAX_THREAD);
-//	secure(KEY_PATH,PASSWORD,null,null);
+
+        try {
+            UserDataBaseHelper.INSTANCE.initialize();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 // End of user code
 
     get("/hello", (request, response) -> "Hello World");
 
+    post("/Authentication",(request, response) -> {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNodeRoot = objectMapper.readTree(request.body());
+
+        String username = jsonNodeRoot.get("username").asText();
+        String password = jsonNodeRoot.get("password").asText();
+        String device = jsonNodeRoot.get("device").asText();
+
+        String result = UserDataBaseHelper.INSTANCE.checkCredentials(username,password,device);
+
+        response.type("application/json");
+
+        JsonNode jsonBody = JsonNodeFactory.instance.objectNode();
+
+        if(result.equals(UserDataBaseHelper.SUCCESSFUL_AUTHENTICATION)){
+            String token = AuthenticationUtil.INSTANCE.createToken(username);
+            UserDataBaseHelper.INSTANCE.updateToken(username,token);
+            ((ObjectNode) jsonBody).put("result",result);
+            ((ObjectNode) jsonBody).put("access_token",token);
+            ((ObjectNode) jsonBody).put("token_type","Bearer");
+            ((ObjectNode) jsonBody).put("expires_in",86400);
+
+             response.status(200);
+        }
+        else{
+            ((ObjectNode) jsonBody).put("result",result);
+            response.status(404);
+        }
+
+        response.body(jsonBody.toString());
+
+        return response;
+
+    });
+
+    put("/User",(request, response) -> {
+        //TODO Create a user only if the request comes from an admin
+        UserDataBaseHelper.INSTANCE.createUser();
+        response.status(200);
+        return response;
+    });
+
 	post("/Metadata",(request, response)->{
 
-            //convert the request.body() into a List of the received object
-            List<MobilePrivacyProfilerDB_metadata> list = deserializeList(request.body(),MobilePrivacyProfilerDB_metadata.class,response);
+        //convert the request.body() into a List of the received object
+        List list = deserializeList(request.body(), MobilePrivacyProfilerDB_metadata.class, response);
 
-            //store the objects into the DB
-            String stringResponse = storeData(list,MobilePrivacyProfilerDB_metadata.class,getDBHelper().mobilePrivacyProfilerDB_metadataDao,response);
-            return stringResponse;
+        //store the objects into the DB
+        String stringResponse = storeData(list, MobilePrivacyProfilerDB_metadata.class, MobilePrivacyProfilerDBHelper.INSTANCE.mobilePrivacyProfilerDB_metadataDao, response);
+        return stringResponse;
     });
 
 	post("/ApplicationHistory",(request, response)->{
@@ -65,7 +113,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<ApplicationHistory> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().applicationHistoryDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.applicationHistoryDao,response);
         return stringResponse;
     });
 
@@ -75,7 +123,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<ApplicationUsageStats> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().applicationUsageStatsDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.applicationUsageStatsDao,response);
         return stringResponse;
     });
 
@@ -85,7 +133,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<Authentification> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().authentificationDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.authentificationDao,response);
         return stringResponse;
     });
 
@@ -95,7 +143,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<Contact> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().contactDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactDao,response);
         return stringResponse;
     });
 
@@ -105,7 +153,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<ContactOrganisation> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().contactOrganisationDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactOrganisationDao,response);
         return stringResponse;
     });
 
@@ -115,7 +163,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<ContactIM> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().contactIMDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactIMDao,response);
         return stringResponse;
     });
 
@@ -125,7 +173,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<ContactEvent> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().contactEventDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactEventDao,response);
         return stringResponse;
     });
 
@@ -135,7 +183,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<ContactPhoneNumber> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().contactPhoneNumberDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactPhoneNumberDao,response);
         return stringResponse;
     });
 
@@ -145,7 +193,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<ContactPhysicalAddress> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().contactPhysicalAddressDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactPhysicalAddressDao,response);
         return stringResponse;
     });
 
@@ -155,7 +203,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<ContactEmail> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().contactEmailDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactEmailDao,response);
         return stringResponse;
     });
 
@@ -165,7 +213,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<KnownWifi> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().knownWifiDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.knownWifiDao,response);
         return stringResponse;
     });
 
@@ -175,7 +223,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<LogsWifi> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().logsWifiDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.logsWifiDao,response);
         return stringResponse;
     });
 
@@ -185,7 +233,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<Geolocation> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().geolocationDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.geolocationDao,response);
         return stringResponse;
     });
 
@@ -195,7 +243,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<CalendarEvent> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().calendarEventDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.calendarEventDao,response);
         return stringResponse;
     });
 
@@ -205,7 +253,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<PhoneCallLog> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().phoneCallLogDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.phoneCallLogDao,response);
         return stringResponse;
     });
 
@@ -215,7 +263,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<Cell> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().cellDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.cellDao,response);
         return stringResponse;
     });
 
@@ -225,7 +273,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<OtherCellData> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().otherCellDataDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.otherCellDataDao,response);
         return stringResponse;
     });
 
@@ -235,7 +283,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<CdmaCellData> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().cdmaCellDataDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.cdmaCellDataDao,response);
         return stringResponse;
     });
 
@@ -245,7 +293,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<NeighboringCellHistory> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().neighboringCellHistoryDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.neighboringCellHistoryDao,response);
         return stringResponse;
     });
 
@@ -255,7 +303,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<BluetoothDevice> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().bluetoothDeviceDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.bluetoothDeviceDao,response);
         return stringResponse;
     });
 
@@ -265,7 +313,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<BluetoothLog> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().bluetoothLogDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.bluetoothLogDao,response);
         return stringResponse;
     });
 
@@ -275,7 +323,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<SMS> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().sMSDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.sMSDao,response);
         return stringResponse;
     });
 
@@ -285,7 +333,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<BatteryUsage> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().batteryUsageDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.batteryUsageDao,response);
         return stringResponse;
     });
 
@@ -295,7 +343,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         List<NetActivity> list = deserializeList(request.body(),type,response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,getDBHelper().netActivityDao,response);
+        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.netActivityDao,response);
         return stringResponse;
     });
 
@@ -306,13 +354,13 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
             try {
                 while (iteratorDbObject.hasNext()) {
                     Object object = iteratorDbObject.next();
-                    boolean redundant = getDBHelper().isRegisteredDbClassObject(DbClass.class.cast(object),type,dao);
+                    boolean redundant = MobilePrivacyProfilerDBHelper.INSTANCE.isRegisteredDbClassObject(DbClass.class.cast(object),type,dao);
                     log.info("----> Add "+type.getSimpleName()+" : redundant? : " + redundant);
                     if (!redundant) {
                         dao.create(type.cast(object));
                     }else{
                         //update it in the DB
-                        getDBHelper().updateObjectFromDB(DbClass.class.cast(object),type,dao);
+                        MobilePrivacyProfilerDBHelper.INSTANCE.updateObjectFromDB(DbClass.class.cast(object),type,dao);
                     }
                 }// end while
             } catch (SQLException e) {  e.printStackTrace();
@@ -448,35 +496,10 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         return result;
     }
 
-    private static MobilePrivacyProfilerDBHelper getDBHelper(){
-        if(dbHelper == null){
-            // - - - Data Base - - -
-            DBTools dBTools = new DBTools();
-            try {
-                File file = new File ("./database/MobilePrivacyProfilerDB.db");
-                log.info("Does \"./database/MobilePrivacyProfilerDB.db\" exist :"+file.exists());
 
-                JdbcConnectionSource connectionSource = null;
-                connectionSource = new JdbcConnectionSource(DBConstants.DATABASE_URL);
-
-                if(!file.exists()){
-                    log.info("Start database initialisation");
-                    dBTools.initializeSQLite(DBConstants.DATABASE_URL);
-                    dBTools.databaseInitialisation(connectionSource);
-                }
-
-
-                dbHelper = dBTools.setupDatabase(connectionSource);
-
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return dbHelper;
+    public static JsonNode parseBody(String body) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readTree(body);
     }
 
 }//end class

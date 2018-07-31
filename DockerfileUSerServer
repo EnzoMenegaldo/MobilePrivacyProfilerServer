@@ -1,5 +1,0 @@
-FROM java
-ADD classes/artifacts/MobilePrivacyProfilerUserServer_main_jar/MobilePrivacyProfilerUserServer_main.jar /opt/main.jar
-ADD classes/artifacts/MobilePrivacyProfilerUserServer_main_jar/database /opt/database
-ADD classes/artifacts/MobilePrivacyProfilerUserServer_main_jar/credentials /opt/credentials
-CMD java -jar /opt/main.jar
