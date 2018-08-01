@@ -1,11 +1,5 @@
 package fr.inria.diverse.mobileprivacyprofilerserver.database.databaseUtil;
 
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
-import fr.inria.diverse.mobileprivacyprofilerserver.database.user.User;
-import fr.inria.diverse.mobileprivacyprofilerserver.database.user.UserDataBaseHelper;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;

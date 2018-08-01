@@ -18,9 +18,9 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserDataBaseHelper {
+public class UserDBHelper {
 
-    public static final UserDataBaseHelper INSTANCE = new UserDataBaseHelper();
+    public static final UserDBHelper INSTANCE = new UserDBHelper();
 
     public final static String DATABASE_FILE = "database/UserDataBase.db";
     private static final String email_file = "database/email.txt";
@@ -34,7 +34,7 @@ public class UserDataBaseHelper {
 
     public static Dao<User, Integer> userDao;
 
-    private UserDataBaseHelper() { }
+    private UserDBHelper() { }
 
     /**
      * Initialize our database and DAOs
@@ -68,7 +68,7 @@ public class UserDataBaseHelper {
      */
     public void setupDatabase(ConnectionSource connectionSource) throws Exception {
 
-        UserDataBaseHelper.userDao = DaoManager.createDao(connectionSource, User.class);
+        UserDBHelper.userDao = DaoManager.createDao(connectionSource, User.class);
 
     }
 

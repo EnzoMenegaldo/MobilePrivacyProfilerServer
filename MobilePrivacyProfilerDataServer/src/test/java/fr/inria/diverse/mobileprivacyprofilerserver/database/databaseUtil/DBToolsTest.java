@@ -1,12 +1,11 @@
 package fr.inria.diverse.mobileprivacyprofilerserver.database.databaseUtil;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import fr.inria.diverse.mobileprivacyprofilerserver.database.user.UserDataBaseHelperTest;
+import fr.inria.diverse.mobileprivacyprofilerserver.database.user.UserDBHelperTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.xml.transform.Result;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
@@ -23,7 +22,7 @@ public class DBToolsTest {
     @Before
     public void setup(){
 
-        String database_path = UserDataBaseHelperTest.class.getClassLoader().getResource(DATABASE_FILE).getPath();
+        String database_path = UserDBHelperTest.class.getClassLoader().getResource(DATABASE_FILE).getPath();
         database_file = new File(database_path);
 
         if(database_file.exists()){

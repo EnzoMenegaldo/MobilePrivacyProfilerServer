@@ -82,15 +82,17 @@ public class MobilePrivacyProfilerDBHelper {
 	//public RuntimeExceptionDao<NetActivity, Integer> netActivityDao;
 
 	
-	private MobilePrivacyProfilerDBHelper(){
+	private MobilePrivacyProfilerDBHelper(){ }
+
+	public void initialize(){
 		try {
-			File file = new File ("./database/MobilePrivacyProfilerDB.db");
-			log.info("Does \"./database/MobilePrivacyProfilerDB.db\" exist :"+file.exists());
+			File file = new File("./database/MobilePrivacyProfilerDB.db");
+			log.info("Does \"./database/MobilePrivacyProfilerDB.db\" exist :" + file.exists());
 
 			JdbcConnectionSource connectionSource = null;
 			connectionSource = new JdbcConnectionSource(DBConstants.DATABASE_URL);
 
-			if(!file.exists()){
+			if (!file.exists()) {
 				log.info("Start database initialisation");
 				DBTools.INSTANCE.initializeSQLite(DBConstants.DATABASE_URL);
 				MobilePrivacyProfilerDBHelper.INSTANCE.databaseInitialisation(connectionSource);
@@ -98,9 +100,7 @@ public class MobilePrivacyProfilerDBHelper {
 
 			MobilePrivacyProfilerDBHelper.INSTANCE.setupDatabase(connectionSource);
 
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
+		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();

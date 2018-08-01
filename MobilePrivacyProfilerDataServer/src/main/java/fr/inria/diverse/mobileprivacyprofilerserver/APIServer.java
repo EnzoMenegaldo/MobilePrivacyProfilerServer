@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.j256.ormlite.dao.Dao;
 import fr.inria.diverse.mobileprivacyprofilerserver.database.data.*;
-import fr.inria.diverse.mobileprivacyprofilerserver.database.user.UserDataBaseHelper;
+import fr.inria.diverse.mobileprivacyprofilerserver.database.user.UserDBHelper;
 import fr.inria.diverse.mobileprivacyprofilerserver.utils.AuthenticationUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,7 +47,8 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
 	threadPool(MAX_THREAD);
 
         try {
-            UserDataBaseHelper.INSTANCE.initialize();
+            UserDBHelper.INSTANCE.initialize();
+            MobilePrivacyProfilerDBHelper.INSTANCE.initialize();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,18 +64,17 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         String password = jsonNodeRoot.get("password").asText();
         String device = jsonNodeRoot.get("device").asText();
 
-        String result = UserDataBaseHelper.INSTANCE.checkCredentials(username,password,device);
+        String result = UserDBHelper.INSTANCE.checkCredentials(username,password,device);
 
         response.type("application/json");
 
         JsonNode jsonBody = JsonNodeFactory.instance.objectNode();
 
-        if(result.equals(UserDataBaseHelper.SUCCESSFUL_AUTHENTICATION)){
+        if(result.equals(UserDBHelper.SUCCESSFUL_AUTHENTICATION)){
             String token = AuthenticationUtil.INSTANCE.createToken(username);
-            UserDataBaseHelper.INSTANCE.updateToken(username,token);
+            UserDBHelper.INSTANCE.updateToken(username,token);
             ((ObjectNode) jsonBody).put("result",result);
             ((ObjectNode) jsonBody).put("access_token",token);
-            ((ObjectNode) jsonBody).put("token_type","Bearer");
             ((ObjectNode) jsonBody).put("expires_in",86400);
 
              response.status(200);
@@ -86,265 +86,465 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
 
         response.body(jsonBody.toString());
 
-        return response;
+        return response.body();
 
     });
 
     put("/User",(request, response) -> {
         //TODO Create a user only if the request comes from an admin
-        UserDataBaseHelper.INSTANCE.createUser();
+        UserDBHelper.INSTANCE.createUser();
         response.status(200);
         return response;
     });
 
-	post("/Metadata",(request, response)->{
+    post("/Metadata",(request, response)->{
 
-        //convert the request.body() into a List of the received object
-        List list = deserializeList(request.body(), MobilePrivacyProfilerDB_metadata.class, response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list, MobilePrivacyProfilerDB_metadata.class, MobilePrivacyProfilerDBHelper.INSTANCE.mobilePrivacyProfilerDB_metadataDao, response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else{
+            //convert the request.body() into a List of the received object
+            List list = deserializeList(data, MobilePrivacyProfilerDB_metadata.class, response);
+
+            //store the objects into the DB
+            storeData(list, MobilePrivacyProfilerDB_metadata.class, MobilePrivacyProfilerDBHelper.INSTANCE.mobilePrivacyProfilerDB_metadataDao, response);
+        }
+        return response;
     });
 
 	post("/ApplicationHistory",(request, response)->{
-        Class type = ApplicationHistory.class;
-        //convert the request.body() into a List of the received object
-        List<ApplicationHistory> list = deserializeList(request.body(),type,response);
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.applicationHistoryDao,response);
-        return stringResponse;
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
+
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = ApplicationHistory.class;
+            //convert the request.body() into a List of the received object
+            List list = deserializeList(data, type, response);
+
+            storeData(list, type, MobilePrivacyProfilerDBHelper.INSTANCE.applicationHistoryDao, response);
+        }
+        return response;
     });
 
 	post("/ApplicationUsageStats",(request, response)->{
-        Class type = ApplicationUsageStats.class;
-        //convert the request.body() into a List of the received object
-        List<ApplicationUsageStats> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.applicationUsageStatsDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = ApplicationUsageStats.class;
+            //convert the request.body() into a List of the received object
+            List<ApplicationUsageStats> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.applicationUsageStatsDao,response);
+        }
+        return response;
     });
 
 	post("/Authentification",(request, response)->{
-        Class type = Authentification.class;
-        //convert the request.body() into a List of the received object
-        List<Authentification> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.authentificationDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = Authentification.class;
+            //convert the request.body() into a List of the received object
+            List<Authentification> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.authentificationDao,response);
+        }
+        return response;
     });
 
 	post("/Contact",(request, response)->{
-        Class type = Contact.class;
-        //convert the request.body() into a List of the received object
-        List<Contact> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = Contact.class;
+            //convert the request.body() into a List of the received object
+            List<Contact> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactDao,response);
+        }
+        return response;
     });
 
 	post("/ContactOrganisation",(request, response)->{
-        Class type = ContactOrganisation.class;
-        //convert the request.body() into a List of the received object
-        List<ContactOrganisation> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactOrganisationDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = ContactOrganisation.class;
+            //convert the request.body() into a List of the received object
+            List<ContactOrganisation> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactOrganisationDao,response);
+        }
+        return response;
     });
 
 	post("/ContactIM",(request, response)->{
-        Class type = ContactIM.class;
-        //convert the request.body() into a List of the received object
-        List<ContactIM> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactIMDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = ContactIM.class;
+            //convert the request.body() into a List of the received object
+            List<ContactIM> list = deserializeList(request.body(), type, response);
+
+            //store the objects into the DB
+            storeData(list, type, MobilePrivacyProfilerDBHelper.INSTANCE.contactIMDao, response);
+        }
+        return response;
     });
 
 	post("/ContactEvent",(request, response)->{
-        Class type = ContactEvent.class;
-        //convert the request.body() into a List of the received object
-        List<ContactEvent> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactEventDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = ContactEvent.class;
+            //convert the request.body() into a List of the received object
+            List<ContactEvent> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactEventDao,response);
+        }
+        return response;
     });
 
 	post("/ContactPhoneNumber",(request, response)->{
-        Class type = ContactPhoneNumber.class;
-        //convert the request.body() into a List of the received object
-        List<ContactPhoneNumber> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactPhoneNumberDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = ContactPhoneNumber.class;
+            //convert the request.body() into a List of the received object
+            List<ContactPhoneNumber> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactPhoneNumberDao,response);
+        }
+        return response;
     });
 
 	post("/ContactPhysicalAddress",(request, response)->{
-        Class type = ContactPhysicalAddress.class;
-        //convert the request.body() into a List of the received object
-        List<ContactPhysicalAddress> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactPhysicalAddressDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = ContactPhysicalAddress.class;
+            //convert the request.body() into a List of the received object
+            List<ContactPhysicalAddress> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactPhysicalAddressDao,response);
+        }
+        return response;
     });
 
 	post("/ContactEmail",(request, response)->{
-        Class type = ContactEmail.class;
-        //convert the request.body() into a List of the received object
-        List<ContactEmail> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactEmailDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = ContactEmail.class;
+            //convert the request.body() into a List of the received object
+            List<ContactEmail> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.contactEmailDao,response);
+	    }
+        return response;
     });
 
 	post("/KnownWifi",(request, response)->{
-        Class type = KnownWifi.class;
-        //convert the request.body() into a List of the received object
-        List<KnownWifi> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.knownWifiDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = KnownWifi.class;
+            //convert the request.body() into a List of the received object
+            List<KnownWifi> list = deserializeList(request.body(), type, response);
+
+            //store the objects into the DB
+            storeData(list, type, MobilePrivacyProfilerDBHelper.INSTANCE.knownWifiDao, response);
+        }
+        return response;
     });
 
-	post("/LogsWifi",(request, response)->{
+	post("/LogsWifi",(request, response)-> {
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
+
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
         Class type = LogsWifi.class;
         //convert the request.body() into a List of the received object
-        List<LogsWifi> list = deserializeList(request.body(),type,response);
+        List<LogsWifi> list = deserializeList(request.body(), type, response);
 
         //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.logsWifiDao,response);
-        return stringResponse;
+        storeData(list, type, MobilePrivacyProfilerDBHelper.INSTANCE.logsWifiDao, response);
+        }
+        return response;
     });
 
 	post("/Geolocation",(request, response)->{
-        Class type = Geolocation.class;
-        //convert the request.body() into a List of the received object
-        List<Geolocation> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.geolocationDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = Geolocation.class;
+            //convert the request.body() into a List of the received object
+            List<Geolocation> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.geolocationDao,response);
+        }
+        return response;
     });
 
 	post("/CalendarEvent",(request, response)->{
-        Class type = CalendarEvent.class;
-        //convert the request.body() into a List of the received object
-        List<CalendarEvent> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.calendarEventDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = CalendarEvent.class;
+            //convert the request.body() into a List of the received object
+            List<CalendarEvent> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.calendarEventDao,response);
+        }
+        return response;
     });
 
 	post("/PhoneCallLog",(request, response)->{
-        Class type = PhoneCallLog.class;
-        //convert the request.body() into a List of the received object
-        List<PhoneCallLog> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.phoneCallLogDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = PhoneCallLog.class;
+            //convert the request.body() into a List of the received object
+            List<PhoneCallLog> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.phoneCallLogDao,response);
+        }
+        return response;
     });
 
 	post("/Cell",(request, response)->{
-        Class type = Cell.class;
-        //convert the request.body() into a List of the received object
-        List<Cell> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.cellDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = Cell.class;
+            //convert the request.body() into a List of the received object
+            List<Cell> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.cellDao,response);
+        }
+        return response;
     });
 
 	post("/OtherCellData",(request, response)->{
-        Class type = OtherCellData.class;
-        //convert the request.body() into a List of the received object
-        List<OtherCellData> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.otherCellDataDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = OtherCellData.class;
+            //convert the request.body() into a List of the received object
+            List<OtherCellData> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.otherCellDataDao,response);
+        }
+        return response;
     });
 
 	post("/CdmaCellData",(request, response)->{
-        Class type = CdmaCellData.class;
-        //convert the request.body() into a List of the received object
-        List<CdmaCellData> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.cdmaCellDataDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = CdmaCellData.class;
+            //convert the request.body() into a List of the received object
+            List<CdmaCellData> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.cdmaCellDataDao,response);
+        }
+        return response;
     });
 
 	post("/NeighboringCellHistory",(request, response)->{
-        Class type = NeighboringCellHistory.class;
-        //convert the request.body() into a List of the received object
-        List<NeighboringCellHistory> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.neighboringCellHistoryDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = NeighboringCellHistory.class;
+            //convert the request.body() into a List of the received object
+            List<NeighboringCellHistory> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.neighboringCellHistoryDao,response);
+        }
+        return response;
     });
 
 	post("/BluetoothDevice",(request, response)->{
-        Class type = BluetoothDevice.class;
-        //convert the request.body() into a List of the received object
-        List<BluetoothDevice> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.bluetoothDeviceDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = BluetoothDevice.class;
+            //convert the request.body() into a List of the received object
+            List<BluetoothDevice> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.bluetoothDeviceDao,response);
+        }
+        return response;
     });
 
 	post("/BluetoothLog",(request, response)->{
-        Class type = BluetoothLog.class;
-        //convert the request.body() into a List of the received object
-        List<BluetoothLog> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.bluetoothLogDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = BluetoothLog.class;
+            //convert the request.body() into a List of the received object
+            List<BluetoothLog> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.bluetoothLogDao,response);
+        }
+        return response;
     });
 
 	post("/SMS",(request, response)->{
-        Class type = SMS.class;
-        //convert the request.body() into a List of the received object
-        List<SMS> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.sMSDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = SMS.class;
+            //convert the request.body() into a List of the received object
+            List<SMS> list = deserializeList(request.body(), type, response);
+
+            //store the objects into the DB
+            storeData(list, type, MobilePrivacyProfilerDBHelper.INSTANCE.sMSDao, response);
+        }
+        return response;
     });
 
 	post("/BatteryUsage",(request, response)->{
-        Class type = BatteryUsage.class;
-        //convert the request.body() into a List of the received object
-        List<BatteryUsage> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.batteryUsageDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = BatteryUsage.class;
+            //convert the request.body() into a List of the received object
+            List<BatteryUsage> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.batteryUsageDao,response);
+        }
+        return response;
     });
 
 	post("/NetActivity",(request, response)->{
-        Class type = NetActivity.class;
-        //convert the request.body() into a List of the received object
-        List<NetActivity> list = deserializeList(request.body(),type,response);
+        JsonNode body  = parseBody(request.body());
+        String token = body.get("token").asText();
+        String data = body.get("data").toString();
 
-        //store the objects into the DB
-        String stringResponse = storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.netActivityDao,response);
-        return stringResponse;
+        if(!UserDBHelper.INSTANCE.checkToken(token))
+            response.status(401);
+        else {
+            Class type = NetActivity.class;
+            //convert the request.body() into a List of the received object
+            List<NetActivity> list = deserializeList(data,type,response);
+
+            //store the objects into the DB
+            storeData(list,type,MobilePrivacyProfilerDBHelper.INSTANCE.netActivityDao,response);
+        }
+        return response;
     });
 
     }//end main
