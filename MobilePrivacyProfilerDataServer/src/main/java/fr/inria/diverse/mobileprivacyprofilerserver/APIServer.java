@@ -56,7 +56,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
 
     get("/hello", (request, response) -> "Hello World");
 
-    post("/Authentication",(request, response) -> {
+    post("/Login",(request, response) -> {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNodeRoot = objectMapper.readTree(request.body());
 
@@ -151,7 +151,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         return response;
     });
 
-	post("/Authentification",(request, response)->{
+	post("/Authentications",(request, response)->{
         JsonNode body  = parseBody(request.body());
         String token = body.get("token").asText();
         String data = body.get("data").toString();
