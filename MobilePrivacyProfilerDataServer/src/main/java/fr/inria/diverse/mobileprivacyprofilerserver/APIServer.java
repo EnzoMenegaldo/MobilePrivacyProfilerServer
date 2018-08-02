@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.j256.ormlite.dao.Dao;
 import fr.inria.diverse.mobileprivacyprofilerserver.database.data.*;
+import fr.inria.diverse.mobileprivacyprofilerserver.database.user.User;
 import fr.inria.diverse.mobileprivacyprofilerserver.database.user.UserDBHelper;
 import fr.inria.diverse.mobileprivacyprofilerserver.utils.AuthenticationUtil;
 import org.apache.commons.logging.Log;
@@ -14,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 import spark.Response;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -90,10 +92,21 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
 
     });
 
-    put("/User",(request, response) -> {
-        //TODO Create a user only if the request comes from an admin
-        UserDBHelper.INSTANCE.createUser();
-        response.status(200);
+    post("/User",(request, response) -> {
+        JsonNode body  = parseBody(request.body());
+        String username = body.get("username").asText();
+        String password = body.get("password").asText();
+        String email = body.get("email").asText();
+
+        String result = UserDBHelper.INSTANCE.checkCredentials(username,password,"");
+
+        if(!result.equals(UserDBHelper.SUCCESSFUL_AUTHENTICATION))
+            response.status(401);
+        else{
+            if(UserDBHelper.INSTANCE.createUser(email))
+                UserDBHelper.INSTANCE.saveNewEmailUser(email);
+            response.status(200);
+        }
         return response;
     });
 
@@ -151,7 +164,7 @@ private static MobilePrivacyProfilerDBHelper dbHelper;
         return response;
     });
 
-	post("/Authentications",(request, response)->{
+	post("/Authentification",(request, response)->{
         JsonNode body  = parseBody(request.body());
         String token = body.get("token").asText();
         String data = body.get("data").toString();

@@ -6,11 +6,15 @@ import com.j256.ormlite.table.DatabaseTable;
 import fr.inria.diverse.mobileprivacyprofilerserver.utils.GmailUtil;
 import fr.inria.diverse.mobileprivacyprofilerserver.utils.AuthenticationUtil;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
+import static fr.inria.diverse.mobileprivacyprofilerserver.database.user.UserDBHelper.PROFILE_EMAIL;
+
 @DatabaseTable(tableName = "user")
 public class User {
 
-    //https://stackoverflow.com/questions/26135310/gmail-api-returns-403-error-code-and-delegation-denied-for-user-email
-    private static final String PROFILE_EMAIL = "me";//"mobileprofiler.ur1@utils.com";
     public static final String USER_USERNAME_PREFIX = "profile_user_";
 
     public static final String USER_ID_XML = "id";
@@ -51,15 +55,17 @@ public class User {
 
     public User() {} // needed by ormlite
 
-    public User(String username, byte[] salt, byte[] password, String email) {
-        super();
+    public User(String username, String email) throws GeneralSecurityException, IOException, MessagingException {
         this.username = username;
-        this.salt = salt;
-        this.password = password;
         this.email = email;
+        this.salt = AuthenticationUtil.INSTANCE.generateSalt();
+        final String clearPassword = AuthenticationUtil.INSTANCE.generateRandomPassword(AuthenticationUtil.Length);
+        sendPasswordToEmail(clearPassword);
+        this.password = AuthenticationUtil.INSTANCE.hash(clearPassword.toCharArray(),this.salt);
+        this.device = "";
     }
 
-    public User(String email, int id){
+    public User(String email, int id) throws GeneralSecurityException, IOException, MessagingException {
         this.username = USER_USERNAME_PREFIX + id;
         this.email = email;
         this.salt = AuthenticationUtil.INSTANCE.generateSalt();
@@ -128,13 +134,9 @@ public class User {
         this.tokenLastUpdate = tokenLastUpdate;
     }
 
-    public void sendPasswordToEmail(String password){
-        try {
-            GmailUtil.INSTANCE.sendMessage(this.email,PROFILE_EMAIL,"Profile : nom d'utilisateur et mot de passe","Bonjour,\n\nVous trouverez ci-dessous votre nom d'utilisateur ainsi que votre mot passe nécessaires lors de votre connection à l'application.\nNom d'utilisateur : "+ getUsername()+"\nMot de passe : "+password+"\n\nL'équipe Profile.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+    public void sendPasswordToEmail(String password) throws GeneralSecurityException, MessagingException, IOException {
+        //https://stackoverflow.com/questions/26135310/gmail-api-returns-403-error-code-and-delegation-denied-for-user-email
+        GmailUtil.INSTANCE.sendMessage(this.email,PROFILE_EMAIL,"Profile : nom d'utilisateur et mot de passe","Bonjour,\n\nVous trouverez ci-dessous votre nom d'utilisateur ainsi que votre mot passe nécessaires lors de votre connection à l'application.\nNom d'utilisateur : "+ getUsername()+"\nMot de passe : "+password+"\n\nL'équipe Profile.");
     }
 
     @Override
