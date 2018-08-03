@@ -33,7 +33,6 @@ import static spark.Spark.secure;
 
 public class APIServer {
 
-private static MobilePrivacyProfilerDBHelper dbHelper;
     // Initialising log management
     private static Log log = LogFactory.getLog(APIServer.class);
 

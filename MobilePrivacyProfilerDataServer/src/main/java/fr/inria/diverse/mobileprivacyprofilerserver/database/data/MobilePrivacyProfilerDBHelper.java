@@ -12,6 +12,7 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import fr.inria.diverse.mobileprivacyprofilerserver.database.databaseUtil.DBConstants;
 import fr.inria.diverse.mobileprivacyprofilerserver.database.databaseUtil.DBTools;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,6 +20,8 @@ import org.apache.commons.logging.LogFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static fr.inria.diverse.mobileprivacyprofilerserver.database.databaseUtil.DBConstants.DATABASE_FILE_PATH;
 //End of user code
 /**
  * Context class used to simplify the access to the different DAOs of the application
@@ -86,11 +89,10 @@ public class MobilePrivacyProfilerDBHelper {
 
 	public void initialize(){
 		try {
-			File file = new File("./database/MobilePrivacyProfilerDB.db");
-			log.info("Does \"./database/MobilePrivacyProfilerDB.db\" exist :" + file.exists());
+			File file = new File(DATABASE_FILE_PATH);
+			log.info("Does \""+DATABASE_FILE_PATH+" exist :" + file.exists());
 
-			JdbcConnectionSource connectionSource = null;
-			connectionSource = new JdbcConnectionSource(DBConstants.DATABASE_URL);
+			JdbcConnectionSource connectionSource = new JdbcConnectionSource(DBConstants.DATABASE_URL);
 
 			if (!file.exists()) {
 				log.info("Start database initialisation");

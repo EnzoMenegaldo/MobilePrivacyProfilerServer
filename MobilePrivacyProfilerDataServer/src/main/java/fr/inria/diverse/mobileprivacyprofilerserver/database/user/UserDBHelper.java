@@ -8,6 +8,7 @@ import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import fr.inria.diverse.mobileprivacyprofilerserver.database.databaseUtil.DBConstants;
 import fr.inria.diverse.mobileprivacyprofilerserver.database.databaseUtil.DBTools;
 import fr.inria.diverse.mobileprivacyprofilerserver.utils.AuthenticationUtil;
 import fr.inria.diverse.mobileprivacyprofilerserver.utils.GmailUtil;
@@ -21,10 +22,6 @@ import java.sql.SQLException;
 public class UserDBHelper {
 
     public static final UserDBHelper INSTANCE = new UserDBHelper();
-
-    public final static String DATABASE_FILE = "database/UserDataBase.db";
-    private static final String email_file = "database/email.txt";
-    public static String DATABASE_URL;
 
     public final static String SUCCESSFUL_AUTHENTICATION = "Authentification réussie";
     public final static String ALREADY_LOGIN_ANOTHER_APP = "Votre compte est déjà lié à un autre appareil";
@@ -46,14 +43,12 @@ public class UserDBHelper {
         try {
 
             //We have to add '.' to the classpath of the jar to make it work
-            File database_file = new File(DATABASE_FILE);
+            File database_file = new File(DBConstants.USER_DATABASE_FILE_PATH);
 
-            DATABASE_URL = "jdbc:sqlite:" + DATABASE_FILE;
-
-            JdbcConnectionSource connectionSource = new JdbcConnectionSource(DATABASE_URL);
+            JdbcConnectionSource connectionSource = new JdbcConnectionSource(DBConstants.USER_DATABASE_URL);
 
             if (!database_file.exists()) {
-                DBTools.INSTANCE.initializeSQLite(DATABASE_URL);
+                DBTools.INSTANCE.initializeSQLite(DBConstants.USER_DATABASE_URL);
                 databaseInitialisation(connectionSource);
             }
 
@@ -243,11 +238,11 @@ public class UserDBHelper {
     public void createUsers(){
         BufferedReader br;
         try {
-            File file = new File(email_file);
+            File file = new File(DBConstants.EMAIL_FILE_PATH);
             if(!file.exists())
                 file.createNewFile();
 
-            br = new BufferedReader(new FileReader(email_file));
+            br = new BufferedReader(new FileReader(DBConstants.EMAIL_FILE_PATH));
 
             String email;
             while ((email = br.readLine()) != null) {
@@ -295,11 +290,11 @@ public class UserDBHelper {
     public void saveNewEmailUser(String email){
         BufferedWriter bw;
         try {
-            File file = new File(email_file);
+            File file = new File(DBConstants.EMAIL_FILE_PATH);
             if(!file.exists())
                 file.createNewFile();
 
-            bw = new BufferedWriter(new FileWriter(email_file,true));
+            bw = new BufferedWriter(new FileWriter(DBConstants.EMAIL_FILE_PATH,true));
             bw.write(email+"\n");
 
             bw.close();

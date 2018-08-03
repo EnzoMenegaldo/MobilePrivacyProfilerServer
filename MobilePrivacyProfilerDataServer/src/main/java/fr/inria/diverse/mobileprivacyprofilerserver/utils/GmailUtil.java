@@ -29,7 +29,7 @@ public class GmailUtil {
 
     private static final String APPLICATION_NAME = "PROFILE";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final String CREDENTIALS_FOLDER = "credentials"; // Directory to store user credentials.
+    private static final String CREDENTIALS_FOLDER = "data/credentials"; // Directory to store user credentials.
 
     public static final GmailUtil INSTANCE = new GmailUtil();
 
