@@ -19,6 +19,9 @@ import java.security.GeneralSecurityException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Here are all the methods which interact with the UserDatabase
+ */
 public class UserDBHelper {
 
     public static final UserDBHelper INSTANCE = new UserDBHelper();
@@ -276,6 +279,10 @@ public class UserDBHelper {
         }
     }
 
+    /**
+     * Create an admin user and save in it the database
+     * @throws SQLException
+     */
     public void setupAdminCredentials() throws SQLException {
         if(!isUserRegistered(PROFILE_EMAIL)){
             String username = "admin";
@@ -287,6 +294,10 @@ public class UserDBHelper {
         }
     }
 
+    /**
+     * Add the email address to the file
+     * @param email
+     */
     public void saveNewEmailUser(String email){
         BufferedWriter bw;
         try {
@@ -302,5 +313,32 @@ public class UserDBHelper {
             e.printStackTrace();
         }
     }
+
+    /**
+     * return true if the credentials are those of the admin
+     * @param password
+     * @return
+     */
+    public String checkAdminCredentials(String password) {
+
+        try {
+            QueryBuilder<User, Integer> queryBuilderByUsername = userDao.queryBuilder();
+            queryBuilderByUsername.where().eq(User.USER_USERNAME_XML, "admin");
+            //Get the first user who has this username;
+            User userByUsername = userDao.queryForFirst(queryBuilderByUsername.prepare());
+
+            if (userByUsername == null)
+                return WRONG_INFORMATION;
+            else if (AuthenticationUtil.INSTANCE.isExpectedPassword(password.toCharArray(), userByUsername.getSalt(), userByUsername.getPassword()))
+                    return SUCCESSFUL_AUTHENTICATION;
+            else
+                return WRONG_INFORMATION;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
 

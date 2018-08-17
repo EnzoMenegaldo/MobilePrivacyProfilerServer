@@ -57,6 +57,12 @@ public class APIServer {
 
     get("/hello", (request, response) -> "Hello World");
 
+    /**
+     * Handle post request asking for login.
+     * First parse the request body and retrieve all user information.
+     * Then Check the user's credentials in the database.
+     * If the authentication successes then a unique token is created and send to the user.
+     */
     post("/Login",(request, response) -> {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNodeRoot = objectMapper.readTree(request.body());
@@ -91,13 +97,16 @@ public class APIServer {
 
     });
 
+    /**
+     * Handle post  request asking to add a new user to the database.
+     * If the authentication successes then the new user is created and the associated email address is added to the email file.
+     */
     post("/User",(request, response) -> {
         JsonNode body  = parseBody(request.body());
-        String username = body.get("username").asText();
         String password = body.get("password").asText();
         String email = body.get("email").asText();
 
-        String result = UserDBHelper.INSTANCE.checkCredentials(username,password,"");
+        String result = UserDBHelper.INSTANCE.checkAdminCredentials(password);
 
         if(!result.equals(UserDBHelper.SUCCESSFUL_AUTHENTICATION))
             response.status(401);
@@ -109,6 +118,10 @@ public class APIServer {
         return response;
     });
 
+    /**
+     * Handle post request asking to add new metadata to the database.
+     * We check first whether the token belongs to a user and if it does then the new metadata are added to the database
+     */
     post("/Metadata",(request, response)->{
 
         JsonNode body  = parseBody(request.body());
