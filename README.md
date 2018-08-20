@@ -22,7 +22,7 @@ To run the container, use the following command on fox2 : docker run -t -i --mou
 
 To deploy it : replace -t -i by -d
 
-Known ubuntu issue
+**Known ubuntu issue**
 
 We have to change the dns server associated to the docker because it is not able to access the default one. 
 
